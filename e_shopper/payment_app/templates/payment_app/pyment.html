@@ -1,0 +1,94 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    // Function to initialize Razorpay and open the payment modal
+    function openRazorpayCheckout() {
+        var options = {
+            key: "{{ razorpay_key }}",
+            amount: "{{ razorpay_order.amount }}", 
+            currency: "INR",
+            name: "E_SHOPPER",
+            description: "Test Transaction",
+            image: "{% static 'images/shop/apple-touch-icon.png' %}",
+            order_id: "{{ order.razorpay_order_id }}",
+            callback_url: "{{callback_url}}",
+            redirect: true,
+            prefill: {
+                name: "{{ order.user.username }}",
+                email: "{{ order.user.email }}",
+                contact: "{{ order.shipping_address.contact }}"
+            },
+            notes: {
+                address: "Razorpay Corporate Office"
+            },
+            theme: {
+                color: "#528FF0"
+            },
+            modal: {
+                ondismiss: function () {
+                    // Redirect to checkout page on payment failure
+                    window.location.href = "{% url 'payment_app:callback' %}?status=failure&order_id={{ order.razorpay_order_id }}";
+                }
+            },
+            config: {
+                display: {
+                    blocks: {
+                        netbanking: {
+                            name: "Net Banking",
+                            instruments: [
+                                {
+                                    method: "netbanking"
+                                }
+                            ]
+                        },
+                        card: {
+                            name: "Card",
+                            instruments: [
+                                {
+                                    method: "card"
+                                }
+                            ]
+                        },
+                        upi: {
+                            name: "UPI",
+                            instruments: [
+                                {
+                                    method: "upi",
+                                    flows: ["qr"]
+                                }
+                            ]
+                        }
+                    },
+                    hide: [
+                        {
+                            method: "wallet"
+                        },
+                        {
+                            method: "cardless_emi"
+                        },
+                        {
+                            method: "paylater"
+                        },
+                        {
+                            method: "bank_transfer"
+                        }
+                    ],
+                }
+            }
+        };
+        
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    // Call the function to open Razorpay checkout
+    openRazorpayCheckout();
+    </script>
+    <input type="hidden" custom="Hidden Element" name="hidden">
+</form>
+{% endblock %}

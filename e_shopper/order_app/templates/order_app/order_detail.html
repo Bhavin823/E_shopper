@@ -1,0 +1,168 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+{% load humanize %}
+<section id='cart_items'>
+	<div class="container">
+		<div class="row">
+			<!-- my order section-->
+                <!--MY ORDERS section here -->
+                <div class="col-sm-12 padding-right">
+                    <div class="panel-group category-products" id="accordian">
+                        <!-- Manage Order -->
+                            <!-- order detail -->
+                            <div class="row" style="padding-left: 2%; margin-bottom: 0px; display: flex; justify-content: space-between; width: 100%;">
+                                <div style="width: 97%; margin-bottom: 15px; display: flex; flex-direction: column; position: relative;">
+                                    <div class="order-container" style="border: 1px solid #E6E4DF; margin-top: 2%; margin-bottom: 2%; width: 100%; ">
+                                        <!-- Order Card -->
+                                        <div class="order-card" style="position: relative; transform-style: preserve-3d; transition: transform 0.2s;">
+                                            <!-- Order Header -->
+                                            <div class="order-card-header" style="position: relative; margin-top: 2%;">
+                                                <div class="row">
+                                                    <div class="col-sm-3" style="margin-top: 10px;">
+                                                        <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">Order Id: {{my_order.id}}</span>
+                                                    </div>
+                                                    <div class="col-sm-6">&nbsp;</div>
+                                                    <div class="col-sm-3">
+                                                        <div class="view-product" style="display: inline;">
+                                                            <i class="fa fa-file-text" style="font-size: x-large; color:#FE980f;"></i>
+                                                        </div>
+                                                        <h5 style="font-size:medium;display:inline; margin-top:5px; color:#878787;">Downlod invoice</h5>
+                                                        <a class="btn btn-primary " style="margin:0px 0px 10px 10px;  position:relative;" href="{% url 'order_app:invoice' my_order.id %}">Download</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="order-card-header" style="position: relative; margin-bottom:10px;">
+                                                <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">{{my_order.shipping_address.name}}</span>
+                                                <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
+                                                    <span style="font-size: 16px; font-weight: 500;">Payment Type: {{my_order.payment_type}}</span>
+                                                </div>
+                                            </div>
+                                            <!-- Order Header -->
+                                            <!-- Oreder Body -->
+                                            <div class="order-card-header" style="position: relative; margin-bottom: 10px;">
+                                                <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">
+                                                    {{my_order.shipping_address.address}},
+                                                    {{my_order.shipping_address.locality}},
+                                                    {{my_order.shipping_address.city}},
+                                                    {{my_order.shipping_address.state}} - {{my_order.shipping_address.pincode}}
+                                                </span>
+                                                <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
+                                                    {% for method in  my_order.payment_methods %}
+                                                    <span style="font-size: 16px; font-weight: 500;">Payment Method: {{method|capfirst}}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="order-card-header" style="position: relative; margin-bottom: 10px;">
+                                                <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">Order Date: <strong>{{my_order.order_date}}</strong></span>
+                                                <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
+                                                    <span style="font-size: 16px; font-weight: 500;">Order Amount: {{my_order.total_amount}}</span>
+                                                </div>
+                                            </div>
+                                            <!-- Order Body -->
+                                        </div>
+                                        <!-- Order Card -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- order detail -->
+
+                            <!-- order item table -->
+                                <div class="row" style="padding-left: 2%; margin-bottom: 0px; display: flex; justify-content: space-between; width: 100%;">
+                                    <div style="width: 97%; margin-bottom: 15px; display: flex; flex-direction: column; position: relative;">
+                                        <div class="table-responsive cart_info">
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                    <tr class="cart_menu">
+                                                        <td class="image">Item</td>
+                                                        <td class="description">Name</td>
+                                                        <td class="price" style="text-align:center;">Price</td>
+                                                        <td class="quantity">Quantity</td>
+                                                        <td class="total" style="text-align:center;">Total</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for item in my_order_item_detail %}
+                                                        <tr>
+                                                            <td class="cart_product" style="margin:10px;">
+                                                                <a href="{% url 'product_app:productdetail' item.product.slug %}">
+                                                                    <img src="{{ item.product.ProductImage.url }}" 
+                                                                    alt="{{ item.product.ProductName }}" width="50"></a>
+                                                            </td>
+                                                            <td class="cart_description" style="white-space: normal;">
+                                                                <h4><a href="{% url 'product_app:productdetail' item.product.slug %}">
+                                                                    {{item.product.ProductName}}</a></h4>
+                                                            </td>
+                                                            <td class="cart_price" style="text-align:center;">
+                                                                <p>Rs.{{ item.price|floatformat:"-2"|intcomma }}</p>
+                                                            </td>
+                                                            <td class="cart_quantity" style="margin-right:2%;text-align:center;">
+                                                                <div class="btn1" style="display: inline;">
+                                                                    <a class="mainbtn" href="#">{{item.quantity}}</a>
+                                                                </div>
+                                                            </td>
+                                                            <td class="cart_total" style="text-align:center;">
+                                                                <p class="cart_total_price" style="font-size:18px;">Rs.{{ item.subtotal|floatformat:"-2"|intcomma  }}</p>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    {% if my_order_item_detail %}
+                                                    <tr>
+                                                        <td colspan="4">&nbsp;</td>
+                                                        <td colspan="2">
+                                                            <table class="table table-condensed total-result">
+                                                                <tr>
+                                                                    <td>Cart Sub Total</td>
+                                                                    <td>Rs.{{ total_order_amount|floatformat:"-2"|intcomma }}</td>
+                                                                </tr>
+                                                                <tr class="shipping-cost">
+                                                                    <td>Shipping Cost</td>
+                                                                    <td>Rs.{{ shipping_cost }}</td>										
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Total</td>
+                                                                    <input type="hidden" name="totalamount" value="{{ total_order_amount|add:shipping_cost }}">
+                                                                    <td><span>Rs.{{ total_order_amount|add:shipping_cost|intcomma }}</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- order item table -->
+                        <!--Manage_Order -->
+                    </div>
+                </div>
+                <!--MY ORDERS section here -->
+            <!-- my order section-->
+        </div>
+	</div>
+
+    <!-- css for link design -->
+    <style>
+		/* Style for the clickable links and hover effect */
+		.clickable-link {
+			font-size: medium;
+			margin-top: 5px;
+			color: #878787;
+			text-decoration: none;
+		}
+		
+		.clickable-link:hover {
+			color: orange;
+		}
+		
+		/* Style for the sections to hide/show */
+		.hidden-section {
+			display: none;
+		}
+    </style>
+    <!-- css for link design -->
+</section>
+<!--main content-->
+{% endblock content %}

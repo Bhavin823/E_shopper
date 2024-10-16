@@ -1,0 +1,231 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+	<!--main content-->
+	<section>
+		<div class="container">	
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+					<li><a href="{% url "home" %}">Home</a></li>
+					{% if category %}
+						<li><a href="{% url "category_app:subcat" category.slug %}">{{category|capfirst}}</a></li>
+					{% else %}
+						<li class="active">{{subcateheadername}}</li>
+					{% endif %}
+				</ol>
+			</div>
+			<div class="row">
+                <!--left part-->
+				<div class="col-sm-3">
+					<div class="left-sidebar">
+						<h2>Category</h2>
+						<!--category-section-->
+						<div class="panel-group category-products" id="accordian">
+							<div class="category-list-wrapper">
+								{% for category in cat_sub_nav %}
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a href="{% url 'category_app:subcat' category.cat_Slug %}">{{category.catName}}</a>
+											<span class="badge pull-right" data-toggle="collapse" data-parent="#accordian" href="#{{ category.catName|slugify }}">
+												<i class="fa fa-plus"></i>
+											</span>
+										</h4>
+									</div>
+									<div id="{{ category.catName|slugify }}" class="panel-collapse collapse">
+										<div class="panel-body">
+											<ul>
+												{% for subcat in category.subcategory %}
+												<li><a href="{% url 'product_app:products' subcat.subslug %}">{{subcat.subName}} </a></li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+						
+						<!--/category-section-->
+					
+						<!--brands_products-->
+						<div class="brands_products">
+							<h2>Brands</h2>
+							<div class="brands-name">
+								<div class="brands-list-wrapper">
+									<ul class="nav nav-pills nav-stacked">
+										<li><a href="#"> <span class="pull-right">(50)</span>Acne</a></li>
+										<li><a href="#"> <span class="pull-right">(56)</span>Grüne Erde</a></li>
+										<li><a href="#"> <span class="pull-right">(27)</span>Albiro</a></li>
+										<li><a href="#"> <span class="pull-right">(32)</span>Ronhill</a></li>
+										<li><a href="#"> <span class="pull-right">(5)</span>Oddmolly</a></li>
+										<li><a href="#"> <span class="pull-right">(9)</span>Boudestijn</a></li>
+										<li><a href="#"> <span class="pull-right">(4)</span>Rösch creative culture</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--/brands_products-->
+						
+						{% comment %} <!--price-range-->
+						<div class="price-range">
+							<h2>Price Range</h2>
+							<div class="well text-center">
+								 <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
+								 <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
+							</div>
+						</div>
+						<!--/price-range--> {% endcomment %}
+						
+						<!--shipping-->
+						<div class="shipping text-center">
+							<img src="{% static 'images/home/shipping.jpg' %}" alt="" />
+						</div>
+						<!--/shipping-->
+					
+					</div>
+				</div>
+				<!--left part-->
+
+				<!--right part-->
+				<div class="col-sm-9 padding-right">
+					<!--features_products-->
+					<div class="features_items">
+						<h2 class="title text-center">{{subcateheadername}}</h2>
+						<div class="product-container" style="display:flex; flex-wrap:wrap;">
+							{% for product in products%}
+								<div class="product-col">
+									<div class="product-image-wrapper" style="border:1px solid #ddd ;">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<a href="{% url 'product_app:productdetail' product.slug %}">	
+													{% if product.ProductImage %}
+														<img src="{{ product.ProductImage.url }}" alt="{{ product.ProductName }}"
+														style="display: block; width: 100%; aspect-ratio: 1/1; border-bottom: 1px solid #ddd;" />
+													{% else %}
+														<img src="#" alt="{{product.ProductName}} image" 
+														style="display: block; width: 100%; aspect-ratio: 1/1; border-bottom: 1px solid #ddd;" />
+													{% endif %}
+													<h2>Rs.{{product.ProductPrice}}</h2>
+													<h4>{{product.brandName}}</h4>
+													<p>{{product.ProductName|truncatechars:35}}</p>
+												</a>
+												{% comment %} {% if request.user.is_authenticated %}
+													{% if product.quantity_in_cart > 0 %}
+														<a href="{% url 'cart_app:cart' %}" class="btn btn-default add-to-cart">
+															<div class="cart-icon">
+																<i class="fa fa-shopping-cart"></i>
+																<span class="cart-quantity">{{product.quantity_in_cart}}</span>
+															</div>&nbsp&nbsp&nbsp&nbsp&nbsp Go to cart
+														</a>
+													{% endif %} {% endcomment %}
+													{% comment %} {% else %}
+														<a href="{% url 'cart_app:add_to_cart' product.slug %}?subcatslug={{ subcatslug }}"
+														class="btn btn-default add-to-cart">
+															<i class="fa fa-shopping-cart"></i> Add to cart
+														</a>
+													{% endif %}
+												{% else %}
+													<a href="{% url 'user_app:login' %}?next={{ request.path }}"
+														class="btn btn-default add-to-cart">
+														<i class="fa fa-lock"></i> Login For Add To Cart
+													</a>
+												{% endif %} {% endcomment %}
+												{% comment %} {% endif %} {% endcomment %}
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+					<!--features_items-->
+					
+					<!--recommended_products-->
+					{% if product_with_same_category %}
+						<div class="recommended_items">
+							<h2 class="title text-center">recommended items</h2>
+							<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+								<div class="carousel-inner">
+									{% for product  in product_with_same_category %}
+										{% if forloop.counter0|divisibleby:3 %}
+											<div class="item {% if forloop.first %} active{% endif %}">
+										{% endif %}
+												<div class="col-sm-4">
+													<div class="product-image-wrapper" style="border:1px solid #ddd ;">
+														<div class="single-products">
+															<div class="productinfo rec-info text-center">
+																<a href="{% url 'product_app:productdetail' product.slug %}">
+																	<img src=" {{product.ProductImage.url}} " alt="" style="width:100%; aspect-ratio: 1 / 1;"/>
+																	<h2>Rs.{{product.ProductPrice}}</h2>
+																	<h4>{{product.brandName}}</h4>
+																	<p>{{product.ProductName|truncatechars:30}}</p>
+																</a>
+																{% comment %} {% if request.user.is_authenticated %}
+																	{% if product.quantity_in_cart > 0 %}
+																		<a href="{% url 'cart_app:cart' %}" class="btn btn-default add-to-cart">
+																			<div class="cart-icon">
+																				<i class="fa fa-shopping-cart"></i>
+																				<span class="cart-quantity">{{product.quantity_in_cart}}</span>
+																			</div>&nbsp&nbsp&nbsp&nbsp&nbsp Go to cart
+																		</a>
+																	{% endif %} {% endcomment %}
+																	{% comment %} {% else %}
+																		<a href="{% url 'cart_app:add_to_cart' product.slug %}?subcatslug={{ subcatslug }}"
+																		class="btn btn-default add-to-cart">
+																			<i class="fa fa-shopping-cart"></i> Add to cart
+																		</a>
+																	{% endif %}
+																{% else %}
+																	<a href="{% url 'user_app:login' %}?next={{ request.path }}"
+																		class="btn btn-default add-to-cart">
+																		<i class="fa fa-lock"></i> Login For Add To Cart 
+																	</a>
+																{% endif %} {% endcomment %}
+																{% comment %} {% endif %} {% endcomment %}
+															</div>
+															<!-- <div class="product-overlay">
+																<div class="overlay-content">
+																	<h2>$56</h2>
+																	<p>Easy Polo Black Edition</p>
+																	<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+																</div>
+															</div> -->
+														</div>
+														<!-- <div class="choose">
+															<ul class="nav nav-pills nav-justified">
+																<li><a href=""><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+																<li><a href=""><i class="fa fa-plus-square"></i>Add to compare</a></li>
+															</ul>
+														</div> -->
+													</div>
+												</div>
+										{% if forloop.counter|divisibleby:3 or forloop.last %}
+											</div>
+										{% endif %}
+									{% endfor %}
+								</div>
+								<a class="left recommended-item-control" href="#recommended-item-carousel"
+									data-slide="prev">
+									<i class="fa fa-angle-left"></i>
+								</a>
+								<a class="right recommended-item-control" href="#recommended-item-carousel"
+									data-slide="next">
+									<i class="fa fa-angle-right"></i>
+								</a>
+							</div>
+						</div>
+					<!--/recommended_products-->
+					{% endif %}
+				</div>
+				<!--right part-->
+			</div>
+		</div>
+	
+	</section>
+	<!--main content-->
+
+{% endblock content %}
+
+  
+

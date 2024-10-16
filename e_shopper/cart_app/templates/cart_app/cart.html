@@ -1,0 +1,143 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="{% url "home" %}">Home</a></li>
+                <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Item</td>
+                        <td class="description">Name</td>
+                        {% if has_size %}
+                            <td>Size</td>
+                        {% endif %}
+                        <td class="price">Price</td>
+                        <td class="quantity">Quantity</td>
+                        <td class="total">Total</td>
+                        <td class="total" style="text-align:center;">
+                            <a href="{% url 'cart_app:clear_cart' %}" style="color:white; text-align:right;"
+                                onmouseover="this.style.color='#333'" onmouseout="this.style.color='white'">
+                                <i class="fa fa-trash-o"></i> Delete All
+                            </a>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if cart_items %}
+                    {% for cart_item in cart_items %}
+                    <tr>
+                        <td class="cart_product" style="margin:10px;">
+                            <a href="{% url 'product_app:productdetail' cart_item.product.slug %}?size={{cart_item.size.id}}"><img
+                                    src="{{ cart_item.product.ProductImage.url }}"
+                                    alt="{{ cart_item.product.ProductName }}" width="50"></a>
+                        </td>
+                        <td class="cart_description" style="white-space: normal;">
+                            <h4 style="margin-top:0; text-align:left;"><a href="{% url 'product_app:productdetail' cart_item.product.slug %}?size={{cart_item.size.id}}">
+                                {{cart_item.product.ProductName}}</a></h4>
+
+                        </td>
+                        {% if has_size %}
+                            <td>
+                                {% if cart_item.size %}
+                                    <h4>{{cart_item.size.size}}</h4>
+                                {% else %}
+                                    <h4>-</h4> <!-- Display a dash if no size is available -->
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        <td class="cart_price">
+                            <p style="margin:0;">Rs.{{ cart_item.final_price }}</p>
+                        </td>
+                        <td class="cart_quantity">
+                            <div class="btn1" style="display: inline;">
+                                <a class="mainusbtn" href="{% url 'cart_app:decrement_cart_quantity' cart_item.id %}">-</a>
+                                <a class="mainbtn" href="#">{{cart_item.quantity}}</a>
+                                <a class="plusbtn" href="{% url 'cart_app:increment_cart_quantity' cart_item.id %}">+</a>
+                            </div>
+                        </td>
+                        <td class="cart_total">
+                            <p class="cart_total_price">Rs.{{ cart_item.subtotal }}</p>
+                        </td>
+                        <td style="margin-right:2%;text-align:center;">
+                            <a class="btn btn-default update" style="margin:0px;" href="{% url 'cart_app:delete_cart_item' cart_item.id %}">Delete Item</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px 0px 20px 0px;">
+                            <h4>Your E-Shopper Cart is empty!</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding:0px 0px 10px 0px;">
+                            <a href="{% url 'home' %}" class="btn btn-default update"
+                                onmouseover="this.style.color='#333';" onmouseout="this.style.color='white';"
+                                style="border-radius: 10px; padding:5px 24px 5px 24px;">Shop now</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<!--/#cart_items-->
+
+<!--total-->
+{% if cart_items %}
+<section id="do_action">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+                <div class="total_area">
+                    <ul>
+                        <li>Cart Sub Total <span>Rs.{{ cart_total }}</span></li>
+                        <li>Total <span>Rs.{{ cart_total }}</span></li>
+                    </ul>
+                    <a class="btn btn-default update" href="{% url 'cart_app:checkout' %}">Check Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!--total-->
+
+<style>
+    .btn1 {
+        width: 150px;
+        height: 40px;
+        padding-bottom: 20%;
+    }
+
+    .btn1 a {
+        background: #FE980F;
+        border: none;
+        /* border-radius: 8%; */
+        padding: 7px 12px;
+        font-size: 1.4rem;
+        color: white;
+        cursor: pointer;
+        outline: none;
+        text-decoration: none;
+        
+    }
+
+    .plusbtn,
+    .mainusbtn {
+        {% comment %} display: none; {% endcomment %}
+        font-weight: 700;
+    }
+</style>
+{% endblock content %}

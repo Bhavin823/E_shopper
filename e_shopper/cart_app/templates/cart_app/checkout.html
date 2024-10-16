@@ -1,0 +1,259 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+
+<section id="cart_items">
+<div class="container">
+    <!-- breadcrumbs -->
+    <div class="breadcrumbs">
+        <ol class="breadcrumb" style="margin-bottom:0px;">
+            <li><a href="{% url "home" %}">Home</a></li>
+            <li class="active">Check out</li>
+        </ol>
+    </div>
+
+    <form method="post" action="{% url 'order_app:create_order' %}">
+        {% csrf_token %}
+        <div class="row">
+            <!-- user login detail-->
+            <div class="col-sm-3">
+                {% if request.user.is_authenticated %}
+                    <h3>Login <i class="fa fa-check" style="font-size: x-large; color:#FE980f"></i></h3>
+                        
+                    <table style="border-collapse: separate; border-spacing: 5px; border: 1px solid #ccc;">
+                        <tr>
+                            <th style="padding: 5px;">Name</th>
+                            <td style="padding: 5px;">{{user_profile.firstname}} {{user_profile.lastname}}</td>
+                        </tr>
+                        <tr>
+                            <th style="padding: 5px;">Phone</th>
+                            <td style="padding: 5px;">{{user_profile.contact}}</td>
+                        </tr>
+                    </table>
+                            
+                    <h5><a href="{% url 'user_app:login' %}?retpath=checkout">Logout & Sign in to another account</a></h5>
+                {% else %}
+                    <a href="{% url 'user_app:login' %}?retpath=checkout">You need to login first</a></h5>
+                {% endif %}
+            </div>
+            <!-- user login detail-->
+
+            <!--Address Part-->
+            <div class="col-sm-9" style="border:1px solid #ccc">
+                <h3>Delivery Address</h3>
+                <div class="row" style="padding-left: 2%; margin-bottom: 0px; display: flex; justify-content: space-between; width: 100%;">
+                    <div style="width: 97%; margin-bottom: 15px; display: flex; flex-direction: column; position: relative;">
+                        <!-- Address List-->
+                        {% for address in user_addresses %}
+                        <label for="custadd{{forloop.counter}}" style="cursor: pointer;">
+                            <div class="address-container" style="border: 1px solid rgb(204, 204, 204); margin-top: 2%; margin-bottom: 2%; width: 100%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); transition: transform 0.2s;">
+                                <!-- Address Card -->
+                                <div class="address-card" style="position: relative; transform-style: preserve-3d; transition: transform 0.2s;">
+                                    <!-- Address Header -->
+                                    <div class="address-card-header" style="position: relative; margin-top: 2%;">
+                                        <span class="address-type" style="margin: 35px 0px 10px 18px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; color: #878787; background-color: #f0f0f0;">{{address.addresstype}}</span>
+                                        <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
+                                            <input class="form-check-input" type="radio" name="address_id" id="custadd{{forloop.counter}}" value="{{address.id}}" required>
+                                            <label class="dorm-check-label fw-bold" for="custadd{{forloop.counter}}">
+                                                Address:{{forloop.counter}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- Address Header -->
+
+                                    <!-- Address Body -->
+                                    <div class="address-card-body" style="margin-top: 0px; padding-left: 2%; transform: rotateY(0deg); backface-visibility: hidden;">
+                                        <div class="row" style="margin-bottom: 0px;">
+                                            <div class="col-md-3">
+                                                <div style="font-size: 18px; font-weight: 600; color: #333;">{{address.name | capfirst}}</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div style="font-size: 18px; font-weight: 600; color: #333;">{{address.contact}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom: 0px;">
+                                            <div class="col-md-12">
+                                                <div style="font-size: 16px; font-weight: 400; color: #555; margin-bottom: 8px;">{{address.address}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-bottom: 10px;">
+                                            <div class="col-md-12">
+                                                <div style="font-size: 16px; font-weight: 400; color: #555;">{{address.locality}}, {{address.city}}, {{address.state}} - <strong>{{address.pincode}}</strong></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Address Body -->
+                                </div>
+                                <!-- Address Card -->
+                            </div>
+                        </label>
+                        {% endfor %}
+                        <!-- Address List-->
+                    </div>
+                </div>
+            </div>
+            <!--Address Part-->
+            
+        </div>
+
+        <div class="review-payment">
+            <h2 style="margin-top:0px;">Review & Payment</h2>
+        </div>
+
+        <!-- cart detail table -->
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Item</td>
+                        <td class="description">Name</td>
+                        {% if has_size %}
+                            <td>Size</td>
+                        {% endif %}
+                        <td class="price">Price</td>
+                        <td class="quantity">Quantity</td>
+                        <td class="total">Total</td>
+                        <td class="total" style="text-align:center;">
+                            <a href="{% url 'cart_app:clear_cart' %}?retpath=checkout" style="color:white; text-align:right;"
+                                onmouseover="this.style.color='#333'" onmouseout="this.style.color='white'">
+                                <i class="fa fa-trash-o"></i> Delete All
+                            </a>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if cart_items %}
+                        {% for cart_item in cart_items %}
+                            <tr>
+                                <td class="cart_product" style="margin:10px;">
+                                    <a href="{% url 'product_app:productdetail' cart_item.product.slug %}">
+                                        <img src="{{ cart_item.product.ProductImage.url }}" 
+                                        alt="{{ cart_item.product.ProductName }}" width="50"></a>
+                                </td>
+                                <td class="cart_description" style="white-space: normal;">
+                                    <h4 style="margin:0; text-align:left;"><a href="{% url 'product_app:productdetail' cart_item.product.slug %}">
+                                        {{cart_item.product.ProductName}}</a></h4>
+                                </td>
+                                {% if has_size %}
+                                    <td>
+                                        {% if cart_item.size %}
+                                            <h4>{{cart_item.size.size}}</h4>
+                                        {% else %}
+                                            <h4>-</h4> <!-- Display a dash if no size is available -->
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                <td class="cart_price">
+                                    <p style="margin:0;">Rs.{{ cart_item.final_price }}</p>
+                                </td>
+                                <td class="cart_quantity">
+                                    <div class="btn1" style="display: inline;">
+                                        <a class="mainusbtn" href="{% url 'cart_app:decrement_cart_quantity' cart_item.id %}?retpath=checkout">-</a>
+                                        <a class="mainbtn" href="#">{{cart_item.quantity}}</a>
+                                        <a class="plusbtn" href="{% url 'cart_app:increment_cart_quantity' cart_item.id %}?retpath=checkout">+</a>
+                                    </div>
+                                </td>
+                                <td class="cart_total">
+                                    <p style="margin:0;" class="cart_total_price">Rs.{{ cart_item.subtotal }}</p>
+                                </td>
+                                <td style="margin-right:2%;text-align:center;">
+                                    <a class="btn btn-default update" style="margin:0px;" href="{% url 'cart_app:delete_cart_item' cart_item.id %}?retpath=checkout">Delete Item</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px 0px 20px 0px;">
+                                <h4>Your E-Shopper Cart is empty!</h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding:0px 0px 10px 0px;">
+                                <a href="{% url 'home' %}" class="btn btn-default update"
+                                    onmouseover="this.style.color='#333';" onmouseout="this.style.color='white';"
+                                    style="border-radius: 10px; padding:5px 24px 5px 24px;">Shop now</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if cart_items %}
+                    <tr>
+                        {% if has_size %}
+                            <td colspan="6">&nbsp;</td>
+                        {% else %}
+                            <td colspan="4">&nbsp;</td>
+                        {% endif %}
+                        <td colspan="2">
+                            <table class="table table-condensed total-result">
+                                <tr>
+                                    <td>Cart Sub Total</td>
+                                    <td>Rs.{{ cart_total }}</td>
+                                </tr>
+                                <tr class="shipping-cost">
+                                    <td>Shipping Cost</td>
+                                    <td>Rs.{{shipping_cost}}</td>										
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <input type="hidden" name="totalamount" value="{{ cart_total }}">
+                                    <td><span>Rs.{{ cart_total|add:shipping_cost }}</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+        </div>
+        <!-- cart detail table -->
+
+        <!-- payment option -->
+        <div class="payment-options" style="margin-bottom:20px; position: relative;  display:inline;">
+            <input type="radio" id="Cod" name="PaymentType" value="COD" class="form-check-input" style="margin-right: 5px;" required>
+            <label for="Cod" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">COD</label>
+            <input type="radio" id="Online" name="PaymentType" value="Online" class="form-check-input" style="margin-right: 5px; margin-left:2%;" required >
+            <label for="Online" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">ONLINE</label>
+        </div>
+        <!-- payment option -->
+
+        <!-- payment button-->
+        <div class="row chekout-button">
+            <button type="submit" id="payment" class="btn btn-primary" style="margin:10px 0px 30px 0px;  position:relative; ">Proceed to Payment</button>
+        </div>
+        <!-- payment button-->
+    </form>
+    {% if messages %}
+    <script>
+        {% for message in messages %}
+            alert("{{ message }}")
+        {% endfor %}
+    </script>
+    {% endif %}
+</div>
+<style>
+    .btn1 {
+        width: 150px;
+        height: 40px;
+        padding-bottom: 20%;
+    }
+
+    .btn1 a {
+        background: #FE980F;
+        border: none;
+        /* border-radius: 8%; */
+        padding: 7px 12px;
+        font-size: 1.4rem;
+        color: white;
+        cursor: pointer;
+        outline: none;
+        text-decoration: none;
+        
+    }
+
+    .plusbtn,
+    .mainusbtn {
+        /* display: none; */
+        font-weight: 700;
+    }
+</style>
+{% endblock content %}

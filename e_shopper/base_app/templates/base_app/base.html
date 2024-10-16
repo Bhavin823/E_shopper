@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>E-Shopper</title>
+
+	<link rel="icon" type="image/png" href="{% static 'images/shop/ES_icon-32x32.png' %}">
+	<!-- css link -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/prettyPhoto.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/price-range.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->       
+    {% comment %} <link rel="shortcut icon" href="{% static 'images/ico/favicon.ico' %}" type="text/css"> {% endcomment %}
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'images/ico/apple-touch-icon-144-precomposed.png' %}" type="text/css">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'images/ico/apple-touch-icon-114-precomposed.png' %}" type="text/css">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'images/ico/apple-touch-icon-72-precomposed.png' %}" type="text/css">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'images/ico/apple-touch-icon-57-precomposed.png' %}" type="text/css">
+	<!-- end css link -->
+
+	<!-- js link -->
+	<script src="{% static 'js/jquery.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
+	<script src="{% static 'js/price-range.js' %}"></script>
+    <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+	<!-- end js link -->
+</head>
+
+<body>
+	<!--header-->
+	<header id="header">
+		<!--header-middle-->
+		<div class="header-middle">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="logo pull-left">
+							<a href="#"><img src="{% static 'images/home/logo.png' %}" alt="" /></a>
+						</div>
+					</div>
+					<div class="col-sm-8">
+						<div class="shop-menu pull-right">
+							<ul class="nav navbar-nav">
+								<!-- Check if user is authenticated -->
+								{% if user.is_authenticated %}
+								<li><a href="#" style="pointer-events: none;"><p style="color:black;">Welcome, {{ user.username |capfirst }}!</p></a></li>
+								<li>
+									<a href="{% url 'cart_app:cart' %}">
+										<div class="cart-icon">
+											<i class="fa fa-shopping-cart"></i>
+											{% if cart_total_quantity %}
+												<span class="cart-quantity">{{cart_total_quantity}}</span>
+											</div>
+											&nbsp&nbsp&nbsp&nbsp&nbspCart
+											{% else %}
+											Cart
+											{% endif %}
+									</a>
+								</li>
+								<li><a href="{% url 'user_app:profile' %}"><i class="fa fa-user"></i> Profile</a></li>
+								<li><a href="{% url 'user_app:logouthandle' %}"><i class="fa fa-long-arrow-right"></i> Logout</a></li>
+								{% else %}
+								<li><a href="{% url 'user_app:profile' %}"><i class="fa fa-user"></i> Profile</a></li>
+								<li><a href="{% url 'cart_app:cart' %}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<li><a href="{% url 'user_app:signup' %}"><i class="fa fa-sign-in"></i> Sign up</a></li>
+								<li><a href="{% url 'user_app:login' %}"><i class="fa fa-lock"></i> Login</a></li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--header-middle-->
+		
+		<!--header-bottom-->
+		<div class="header-bottom">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
+						<div class="mainmenu pull-left">
+							<ul class="nav navbar-nav collapse navbar-collapse">
+								<li><a href="{% url 'home' %}" class="active">Home</a></li>
+								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
+                                    <ul role="menu" class="sub-menu">
+                                        <li><a href="{% url 'product_app:products' 'all' %}">Products</a></li>
+										<li><a href="{% url 'cart_app:checkout' %}">Checkout</a></li> 
+										{% if cart_total_quantity %}
+										<li><a href="{% url 'cart_app:cart'%}">Cart ({{cart_total_quantity}})</a></li> 
+										{% else %}
+										<li><a href="{% url 'cart_app:cart'%}">Cart</a></li> 
+										{% endif %}
+										<li><a href="{% url 'user_app:login' %}">Login</a></li> 
+                                    </ul>
+                                </li> 
+								<li><a href="#contact-us.html">Contact</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="search_box pull-right">
+							<form method="GET" action="{% url 'product_app:product_list' %}">
+								<input type="text" name="q" placeholder="Search Products"/>
+								<button type="submit" style="display:none"></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/header-bottom-->
+	
+	</header>
+	<!--/header-->
+	
+	<!--  dynamic content -->
+	{% block content%}
+	{% endblock %}
+	<!-- dynamic content -->
+	
+	<!--Footer-->
+	<footer id="footer">
+		<div class="footer-widget">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>Service</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<!-- <li><a href="#">Online Help</a></li> -->
+								<li><a href="#">Contact Us</a></li>
+								<li><a href="#">Order Status</a></li>
+								<!-- <li><a href="#">Change Location</a></li> -->
+								<li><a href="#">FAQ’s</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>Quock Shop</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">T-Shirt</a></li>
+								<li><a href="#">Mens</a></li>
+								<li><a href="#">Womens</a></li>
+								<!-- <li><a href="#">Gift Cards</a></li> -->
+								<li><a href="#">Shoes</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>Policies</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">Terms of Use</a></li>
+								<li><a href="#">Privecy Policy</a></li>
+								<li><a href="#">Refund Policy</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>About Shopper</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="#">Company Information</a></li>
+								<li><a href="#">Careers</a></li>
+								<li><a href="#">Copyright</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-sm-3 col-sm-offset-1">
+						<div class="single-widget">
+							<h2>About Shopper</h2>
+							<form action="#" class="searchform">
+								<input type="text" placeholder="Your email address" />
+								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
+								<p>Get the most recent updates from <br />our site and be updated your self...</p>
+							</form>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="footer-bottom">
+			<div class="container">
+				<div class="row">
+					<p class="pull-left">Copyright © 2022 E-SHOPPER Inc. All rights reserved.</p>
+					<!-- <p class="pull-right">Designed by <span><a target="_blank" href="#">xyz</a></span></p> -->
+				</div>
+			</div>
+		</div>
+		
+	</footer>
+	<!--/Footer-->
+
+</body>
+</html>

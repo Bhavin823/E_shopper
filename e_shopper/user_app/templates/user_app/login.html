@@ -1,0 +1,40 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+            </div>
+            <!--signup section-->
+            <div class="col-sm-4 col-sm-offset-1 ">
+                <!--login form-->
+                <div class="login-form">
+                    <h2>Login to your account</h2>
+                    <form method="post" action="{% url 'user_app:loginhandle' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="retpath" value="{{ retpath }}">
+                        <input type="hidden" name="subcatslug" value="{{ subcateslug }}">
+                        <input type="hidden" name="productslug" value="{{ productslug }}">
+                        
+                        <input type="text" name="loginusername" id="loginusername" placeholder="Username" style="color: black;"/>
+                        <input type="password" name="loginpass" id="loginpass" placeholder="Password" />
+                        <span>
+                            <input type="checkbox" class="checkbox"> Keep me signed in
+                        </span>
+                        <button type="submit" value="submit" class="btn btn-default">Login</button>
+                        <br>
+                        <h5>Don't have accounr? <a href="{% url 'user_app:signup' %}">Create Account</a></h5>
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
+                    {% if messagekey %}
+                    <script>alert("{{ messagekey }}")</script>
+                    {% endif %}
+                </div>
+                <!--/login form-->
+            </div>
+            <!--signup section-->
+        </div>
+    </div>
+</section>
+{% endblock content %}

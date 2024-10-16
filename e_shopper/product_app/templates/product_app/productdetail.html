@@ -1,0 +1,383 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<section>
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="{% url "home" %}">Home</a></li>
+                <li><a href="{% url "category_app:subcat" productdetail.category.slug %}">{{productdetail.category|capfirst}}</a></li>
+                <li><a href="{% url "product_app:products" productdetail.subcategory.slug %}">{{productdetail.subcategory|capfirst}}</a></li>
+                <li class="active">{{productdetail.ProductName}}</li>
+            </ol>
+        </div>
+        <div class="row">
+            <!--left part-->
+            <div class="col-sm-3">
+                <div class="left-sidebar">
+                    <h2>Category</h2>
+                    <!--category-Navbar-->
+                    <div class="panel-group category-products" id="accordian">
+                        <div class="category-list-wrapper">
+                        {% for category in cat_sub_nav %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a href="{% url 'category_app:subcat' category.cat_Slug %}">{{category.catName}}</a>
+                                        <span class="badge pull-right" data-toggle="collapse" data-parent="#accordian" href="#{{ category.catName|slugify }}">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </h4>
+                                </div>
+                                <div id="{{ category.catName|slugify }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for subcat in category.subcategory %}
+                                            <li><a href="{% url 'product_app:products' subcat.subslug %}">{{subcat.subName}} </a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!--/category-products-->
+                
+                    <!--brands_products-->
+                    <div class="brands_products">
+                        <h2>Brands</h2>
+                        <div class="brands-name">
+                            <div class="brands-list-wrapper">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="#"> <span class="pull-right">(50)</span>Acne</a></li>
+                                    <li><a href="#"> <span class="pull-right">(56)</span>Grüne Erde</a></li>
+                                    <li><a href="#"> <span class="pull-right">(27)</span>Albiro</a></li>
+                                    <li><a href="#"> <span class="pull-right">(32)</span>Ronhill</a></li>
+                                    <li><a href="#"> <span class="pull-right">(5)</span>Oddmolly</a></li>
+                                    <li><a href="#"> <span class="pull-right">(9)</span>Boudestijn</a></li>
+                                    <li><a href="#"> <span class="pull-right">(4)</span>Rösch creative culture</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/brands_products-->
+
+                    <!--shipping-->
+                    <div class="shipping text-center">
+                        <img src="{% static 'images/home/shipping.jpg' %}" alt="" />
+                    </div>
+                    <!--/shipping-->
+                
+                </div>
+            </div>
+            <!--left part-->
+
+            <!--right part-->
+            <div class="col-sm-9 padding-right">
+                <div class="product-detail-heading">
+                    <h2>Product Detail</h2>
+                </div>
+                
+                <!--product-details-->
+                <div class="product-details">
+                    <div class="col-sm-5">
+                        <div class="view-product product-detail">
+                            <img src="{{ productdetail.ProductImage.url }}" alt="" />
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <!--/product-information-->
+                        <div class="product-information">
+                            <h2>{{productdetail.brandName}}</h2>
+                            <p>{{productdetail.ProductName}}</p>
+                            <hr>
+                            <span>
+                                {% if cart_item  %}
+                                    <span class="prodetprice">Rs.{{cart_item.final_price}}</span>   
+                                {% else %}
+                                    <span class="prodetprice">Rs.{{productdetail.ProductPrice}}</span>
+                                {% endif %}
+                            </span>
+                            <p><b>Availability:</b> In Stock</p>
+                            <p><b>Condition:</b> New</p>
+                            {% if productdetail.category.categoryName == "Books" %}
+                                <p><b>Author:</b> {{productdetail.brandName}}</p>
+                            {% else %}
+                                <p><b>Brand:</b> {{productdetail.brandName}}</p>
+                            {% endif %}
+                            <hr>
+                            {% if available_sizes %}
+                                <h4>Size</h4>
+                            
+                            <div class="size-options">
+                                {% for size in available_sizes %}
+                                    <label class="size-label">
+                                        <input type="radio" name="size" value="{{ size.id }}" data-price="{{ size.additional_price }}"
+                                            {% if cart_item and cart_item.size == size %}checked{% endif %}>
+                                        <span class="size-btn {% if cart_item and cart_item.size == size %}selected{% endif %}">{{ size.size }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            {% if request.user.is_authenticated %}
+                                <a id="add-to-cart-link" 
+                                    href="{% if cart_item %}{% url 'cart_app:cart' %}{% else %}{% url 'cart_app:add_to_cart' productdetail.slug %}?subcatslug=productdetail{% if available_sizes %}&size={{ selected_size }}{% endif %}{% endif %}" 
+                                    class="btn btn-default add-to-cart">
+                                    {% if cart_item %}
+                                        <!-- Go to Cart Button if the selected size is already in the cart -->
+                                        <div class="cart-icon">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            <span class="cart-quantity prodet-cart-quan">{{ cart_item.quantity }}</span>
+                                        </div>&nbsp;&nbsp;&nbsp;Go to Cart
+                                    {% else %}
+                                        <!-- Add to Cart Button if the selected size is not in the cart -->
+                                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                                    {% endif %}
+                                </a>
+                            {% else %}
+                                <a href="{% url 'user_app:login' %}?next={{ request.path }}"
+                                class="btn btn-default add-to-cart">
+                                    <i class="fa fa-lock"></i> Login to Add to Cart
+                                </a>
+                            {% endif %}
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                        const sizeInputs = document.querySelectorAll('input[name="size"]');
+                                        const addToCartLink = document.getElementById('add-to-cart-link');
+                                        const PriceElement = document.querySelector('.prodetprice');
+                                        const basePrice = {{ productdetail.ProductPrice }};  // Base price of the product
+                                        console.log("baseprice:",basePrice)
+
+                                        
+                                        sizeInputs.forEach(function(input) {
+                                            input.addEventListener('change', function() {
+                                                const selectedPrice = parseInt(this.getAttribute('data-price')) || 0;
+                                                const finalPrice = basePrice + selectedPrice
+                                                console.log("finalPrice:",finalPrice)
+
+                                                // Update the displayed price
+                                                PriceElement.textContent = `Rs.${finalPrice}`;
+                                                                                                
+                                                // Remove the "selected" class from all size buttons
+                                                document.querySelectorAll('.size-btn.selected').forEach(function(span) {
+                                                    span.classList.remove('selected');
+                                                });
+
+                                                // Find the corresponding span and add the "selected" class
+                                                this.closest('label').querySelector('.size-btn').classList.add('selected');                                                
+                                                
+                                            });
+                                        });
+
+                                        if (addToCartLink){
+                                            if(sizeInputs.length > 0) {
+                                                sizeInputs.forEach(function(input) {
+                                                    input.addEventListener('change', function() {
+                                                        const selectedSize = this.value;
+                                                        // console.log(selectedSize)
+
+                                                        // Update the Add to Cart link href
+                                                        const originalHref = addToCartLink.href.split('&size=')[0];
+                                                        addToCartLink.href = `${originalHref}&size=${selectedSize}`;
+
+                                                        // Check if the selected size is already in the cart
+                                                        const isProductInCart = "{{ cart_item.size.id }}" === selectedSize;
+                                                        if (!isProductInCart) {
+                                                            addToCartLink.innerHTML = '<i class="fa fa-shopping-cart"></i> Add to cart';
+                                                            addToCartLink.href = `{% url 'cart_app:add_to_cart' productdetail.slug %}?subcatslug=productdetail&size=${selectedSize}&price=${finalPrice}`;
+                                                        } else {
+                                                            addToCartLink.innerHTML = `<div class="cart-icon"><i class="fa fa-shopping-cart"></i><span class="cart-quantity prodet-cart-quan">{{ cart_item.quantity }}</span></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Go to cart`;
+                                                            addToCartLink.href = `{% url 'cart_app:cart' %}`;
+                                                        }
+                                                    });
+                                                });
+                                                
+                                                // Ensure size is selected before adding to cart
+                                                addToCartLink.addEventListener('click', function(e) {
+                                                    const sizeSelected = document.querySelector('input[name="size"]:checked');
+                                                    if (!sizeSelected) {
+                                                        e.preventDefault();
+                                                        alert("Please select a size before adding to cart!");
+                                                    }
+                                                });
+                                            } else {
+                                                // If there are no size options, do not check for size
+                                                addToCartLink.addEventListener('click', function(e) {
+                                                    // Proceed without size validation
+                                                });
+                                            }
+                                        }
+                                    });
+                                </script>
+                                
+
+                        <!--/product-information-->
+                    </div>
+                </div>
+                <!--/product-details-->
+                
+                <!--detai & review -->
+                <div class="category-tab shop-details-tab">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+                            <!-- <li><a href="#companyprofile" data-toggle="tab">Company Profile</a></li>
+                            <li><a href="#tag" data-toggle="tab">Tag</a></li> -->
+                            <li><a href="#reviews" data-toggle="tab">Reviews</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <!-- product detail table -->
+                        <div class="tab-pane fade active in" id="details" >
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr class="techSpecRow">
+                                    <th colspan="2">Product Details</th>
+                                    </tr>
+                                    <tr class="techSpecRow">
+                                    <td colspan="2">{{productdetail.ProductDetail}}</td>
+                                    </tr>
+                                    <tr class="techSpecRow">
+                                    <td class="techSpecTD1">Brand:</td>
+                                    <td class="techSpecTD2">{{productdetail.brandName}}</td>
+                                    </tr>
+                                    <tr class="techSpecRow">
+                                    <td class="techSpecTD1">Model:</td>
+                                    <td class="techSpecTD2">{{productdetail.ProductName}}</td>
+                                    </tr>
+                                    <tr class="techSpecRow">
+                                    <td class="techSpecTD1">Released on:</td>
+                                    <td class="techSpecTD2"> 2011-01-28</td>
+                                    </tr>
+                                    <tr class="techSpecRow">
+                                    <td class="techSpecTD1">Dimensions:</td>
+                                    <td class="techSpecTD2"> 5.50" h x 5.50" w x 2.00" l, .75 pounds</td>
+                                    </tr>
+                                    <tr class="techSpecRow">
+                                    <td class="techSpecTD1">Display size:</td>
+                                    <td class="techSpecTD2">3</td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                        </div>
+                        <!-- product detail table -->
+            
+                        <!-- product review -->
+                        <div class="tab-pane fade " id="reviews" >
+                            <div class="col-sm-12">
+                                <ul>
+                                    <li><a href=""><i class="fa fa-user"></i>Bhavin</a></li>
+                                    <li><a href=""><i class="fa fa-clock-o"></i>12:41 PM</a></li>
+                                    <li><a href=""><i class="fa fa-calendar-o"></i>15 DEC 2022</a></li>
+                                </ul>
+                                <p>{{productdetail.ProductDetail}}</p>
+                                <p><b>Write Your Review</b></p>
+                                
+                                <form action="#">
+                                    <span>
+                                        <input type="text" placeholder="Your Name"/>
+                                        <input type="email" placeholder="Email Address"/>
+                                    </span>
+                                    <textarea name="" ></textarea>
+                                    <b>Rating: </b> <img src="{% static 'images/product-details/rating.png' %}" alt="" />
+                                    <button type="button" class="btn btn-default pull-right">
+                                        Submit
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- product review -->
+                    </div>
+                </div>
+                <!--detail and review-->
+                
+                <!--recommended_products-->
+                {% if product_with_same_subcategory %}
+                <div class="recommended_items">
+                    <h2 class="title text-center">recommended items</h2>
+                    <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for product  in product_with_same_subcategory %}
+                                {% if forloop.counter0|divisibleby:3 %}
+                                    <div class="item {% if forloop.first %} active{% endif %}">
+                                {% endif %}
+                                        <div class="col-sm-4">
+                                            <div class="product-image-wrapper" style="border:1px solid #ddd ;">
+                                                <div class="single-products">
+                                                    <div class="productinfo rec-info text-center">
+                                                        <a href="{% url 'product_app:productdetail' product.slug %}">
+                                                            <img src=" {{product.ProductImage.url}} " alt="" style="width:100%; aspect-ratio: 1 / 1;"/>
+                                                            <h2>Rs.{{product.ProductPrice}}</h2>
+                                                            <h4>{{product.brandName}}</h4>
+                                                            <p>{{product.ProductName|truncatechars:30}}</p>
+                                                        </a>
+                                                        {% comment %} {% if request.user.is_authenticated %}
+                                                            {% if product.quantity_in_cart > 0 %}
+                                                                <a href="{% url 'cart_app:cart' %}" class="btn btn-default add-to-cart">
+                                                                    <div class="cart-icon">
+                                                                        <i class="fa fa-shopping-cart"></i>
+                                                                        <span class="cart-quantity">{{ product.quantity_in_cart }}</span>
+                                                                    </div>&nbsp&nbsp&nbsp&nbsp&nbsp Go to cart
+                                                                </a>
+                                                            {% else %}
+                                                                <a href="{% url 'cart_app:add_to_cart' product.slug %}?subcatslug=productdetail"
+                                                                class="btn btn-default add-to-cart">
+                                                                    <i class="fa fa-shopping-cart"></i> Add to cart
+                                                                </a>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{% url 'user_app:login' %}?next={{ request.path }}"
+                                                                class="btn btn-default add-to-cart">
+                                                                <i class="fa fa-lock"></i> Login For Add To Cart
+                                                            </a>
+                                                        {% endif %} {% endcomment %}
+                                                    </div>
+                                                    <!-- <div class="product-overlay">
+                                                        <div class="overlay-content">
+                                                            <h2>$56</h2>
+                                                            <p>Easy Polo Black Edition</p>
+                                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                                <!-- <div class="choose">
+                                                    <ul class="nav nav-pills nav-justified">
+                                                        <li><a href=""><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+                                                        <li><a href=""><i class="fa fa-plus-square"></i>Add to compare</a></li>
+                                                    </ul>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                {% if forloop.counter|divisibleby:3 or forloop.last %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <a class="left recommended-item-control" href="#recommended-item-carousel"
+                            data-slide="prev">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a class="right recommended-item-control" href="#recommended-item-carousel"
+                            data-slide="next">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                <!--/recommended_products-->
+            </div>
+            <!--right part-->
+        
+        </div>
+    
+    </div>
+
+</section>
+<!--main content-->
+{% endblock content %}	

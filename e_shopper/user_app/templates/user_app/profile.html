@@ -1,0 +1,1127 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+<!--main content-->
+
+<section>
+	<div class="container">
+		<div class="row">
+			
+            <!--left part-->
+			<div class="col-sm-3">
+				<div class="left-sidebar">
+					<!--Profile Navbar-->
+					<div class="panel-group category-products" id="accordian">
+						<div class=row>
+							<div class="col-sm-5 profile-image">
+								<div class="view-product">
+									<img  src="{% static 'images/404/profile_avatar1.jpg' %}" alt="" />
+								</div>
+							</div>
+							<div class="col-sm-7 profile-greeting">
+								<h6 class="profile-hello">Hello</h6>
+								<h4 class="profile-username">{{ user_profile.user.username }}</h4>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Account Setting -->
+					<div class="brands_products">
+						<div class="brands-name">
+							<div class="row">
+								<div class="col-sm-3 user-icon">
+									<div class="view-product">
+										<i class="fa fa-user"></i>
+									</div>
+								</div>
+								<div class="col-sm-9 profile-account">
+									<h5>ACCOUNT SETTING</h5>
+								</div>
+							</div>
+							<hr style="margin-top:4px;">
+							<div class="row profile-option">
+                                <div class="col-sm-3" style="padding-left: 30px;"></div>
+                                <div class="col-sm-9" style="padding: 0px;">
+                                  <h4 style="margin-top: 4px;">
+                                    <a href="#MY_ORDERS" class="clickable-link">MY ORDERS</a>
+                                  </h4>
+                                </div>
+                            </div>
+                            <div class="row profile-option">
+                                <div class="col-sm-3" style="padding-left: 30px;"></div>
+                                <div class="col-sm-9" style="padding: 0px;">
+                                  <h4 style="margin-top: 4px;">
+                                    <a href="#Profile_information" class="clickable-link">Profile Information</a>
+                                  </h4>
+                                </div>
+                            </div>
+                            <div class="row profile-option">
+                                <div class="col-sm-3" style="padding-left: 30px;"></div>
+                                <div class="col-sm-9" style="padding: 0px;">
+                                  <h4 style="margin-top: 4px;">
+                                    <a href="#Addresses" class="clickable-link">Addresses</a>
+                                  </h4>
+                                </div>
+                            </div>
+							<hr style="margin-top:10px;">
+							<div class="row">
+								<div class="col-sm-3 logout-icon">
+									<div class="view-product">
+										<svg width="26" height="26" class="" viewBox="0 0 24 24"
+											xmlns="http://www.w3.org/2000/svg">
+											<path fill="#ffa500" stroke-width="0.3" stroke="#ffa500"
+												d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z">
+											</path>
+										</svg>
+									</div>
+								</div>
+								<div class="col-sm-9 profile-logout">
+									<a href="{% url 'user_app:logouthandle' %}">Logout</a>
+                                </div>
+							</div>
+
+						</div>
+					</div>
+					<!-- Account Setting -->
+
+
+					<!-- Ads -->
+					<div class="shipping text-center">
+						<img src="{% static 'images/home/shipping.jpg' %}" alt="" />
+					</div>
+					<!-- Ads -->
+
+				</div>
+			</div>
+			<!--left part-->
+
+            <!--right part-->
+            <!-- Sections to show/hide -->
+            <!-- my order section-->
+            <div id="MY_ORDERS" class="hidden-section">
+                <!-- Add content for MY ORDERS section here -->
+                <div class="col-sm-9 padding-right">
+                    <div class="left-sidebar">
+                        <div class="panel-group category-products" id="accordian">
+                            <div class="order-list">
+                                <h3>Order List</h3>
+                                {% for order in my_order %}
+                                <div class="order-container">
+                                    <div class="order-item">
+                                        <div class="order-header">
+                                            <span>Order Id</span>
+                                            <span>Date</span>
+                                            <span>Payment</span>
+                                            <span>Method</span>
+                                            <span>Status</span>
+                                            <span>Total</span>
+                                            <span></span>
+                                        </div>
+                                        <div class="order-content">
+                                            <span class="order-number">#{{order.id}}</span>
+                                            <span class="order-item-name">{{ order.order_date|date:"d/m/Y" }}</span>
+                                            <span class="payment-status {{order.payment_status}}">{{order.payment_status|capfirst}}</span> 
+                                            <span class="order-payment">{{order.payment_type}}</span>
+                                            <span class="order-status {{order.status}}">{{order.status|capfirst}}</span>
+                                            <span class="order-total">Rs. {{order.total_amount|add:order.shipping_cost}}</span>
+                                            <a href="{% url 'order_app:order_detail' order.id %}" class="view-product">View Product &raquo;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% comment %} <div class="order-container">
+                                    <div class="order-item">
+                                        <div class="order-header">
+                                            <span>Order Id</span>
+                                            <span>Date</span>
+                                            <span>Payment</span>
+                                            <span>Method</span>
+                                            <span>Status</span>
+                                            <span>Total</span>
+                                            <span></span>
+                                        </div>
+                                        <div class="order-content">
+                                            <span class="order-number">#25658</span>
+                                            <span class="order-item-name">12/12/2024</span>
+                                            <span class="payment-status paid">Paid</span>
+                                            <span class="order-payment">Credit Card</span>
+                                            <span class="order-status received">Received</span>
+                                            <span class="order-total">Rs. 50</span>
+                                            <a href="#" class="view-product">View Product &raquo;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-container">
+                                    <div class="order-item">
+                                        <div class="order-header">
+                                            <span>Order Id</span>
+                                            <span>Date</span>
+                                            <span>Payment</span>
+                                            <span>Method</span>
+                                            <span>Status</span>
+                                            <span>Total</span>
+                                            <span></span>
+                                        </div>
+                                        <div class="order-content">
+                                            <span class="order-number">#78901</span>
+                                            <span class="order-item-name">13/12/2024</span>
+                                            <span class="payment-status paid">Paid</span>
+                                            <span class="order-payment">PayPal</span>
+                                            <span class="order-status shipped">Shipped</span>
+                                            <span class="order-total">Rs. 30</span>
+                                            <a href="#" class="view-product">View Product &raquo;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-container">
+                                    <div class="order-item">
+                                        <div class="order-header">
+                                            <span>Order Id</span>
+                                            <span>Date</span>
+                                            <span>Payment</span>
+                                            <span>Method</span>
+                                            <span>Status</span>
+                                            <span>Total</span>
+                                            <span></span>
+                                        </div>
+                                        <div class="order-content">
+                                            <span class="order-number">#34567</span>
+                                            <span class="order-item-name">14/12/2024</span>
+                                            <span class="payment-status paid">Paid</span>
+                                            <span class="order-payment">Debit Card</span>
+                                            <span class="order-status delivered">Delivered</span>
+                                            <span class="order-total">Rs. 40</span>
+                                            <a href="#" class="view-product">View Product &raquo;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-container">
+                                    <div class="order-item">
+                                        <div class="order-header">
+                                            <span>Order Id</span>
+                                            <span>Date</span>
+                                            <span>Payment</span>
+                                            <span>Method</span>
+                                            <span>Status</span>
+                                            <span>Total</span>
+                                            <span></span>
+                                        </div>
+                                        <div class="order-content">
+                                            <span class="order-number">#45678</span>
+                                            <span class="order-item-name">15/12/2024</span>
+                                            <span class="payment-status failed">Failed</span>
+                                            <span class="order-payment">Online</span>
+                                            <span class="order-status cancelled">Cancelled</span>
+                                            <span class="order-total">Rs. 60</span>
+                                            <a href="#" class="view-product">View Product &raquo;</a>
+                                        </div>
+                                    </div>
+                                </div> {% endcomment %}
+                            </div>
+                            
+                            
+                                
+                            
+                        {% comment %} <!-- Manage Order -->
+                            <div class="row" style="padding-left: 4%;">
+                                <h4 style="display: inline-block; margin-right: 10px;">My Orders</h4>
+                            </div>
+                            <div class="row" style="padding-left: 2%; margin-bottom: 0px; display: flex; justify-content: space-between; width: 100%;">
+                                <div style="width: 97%; margin-bottom: 15px; display: flex; flex-direction: column; position: relative;">
+                                    <!-- Order List-->
+                                    {% for order in my_order %}
+                                    <a href="{% url 'order_app:order_detail' order.id %}" style="text-decoration: none; color: #555;">
+                                        <div class="order-container" style="border: 1px solid rgb(204, 204, 204); margin-top: 2%; margin-bottom: 2%; width: 100%;">
+                                            <!-- Order Card -->
+                                            <div class="order-card" style="position: relative; transform-style: preserve-3d; transition: transform 0.2s;">
+                                                <!-- Order Header -->
+                                                <div class="order-card-header" style="position: relative; margin-top: 2%;">
+                                                    <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">Order Id: {{order.id}}</span>
+                                                    <div class="form-check mr-5 mb-5" style="position: absolute; rig
+                                                    <span>Method</span>ht: 12px; transform: translateY(-115%); cursor: pointer;">
+                                                        <span style="font-size: 16px; font-weight: 500;">Payment Type: {{order.payment_type}}</span>
+                                                    </div>
+                                                </div>
+                                                <!-- Order Header -->
+                                                <!-- Order Body -->
+                                                <div class="address-card-header" style="position: relative; margin-bottom: 10px;">
+                                                    <div class="order-id" style="margin: 10px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; width:70%; ">
+                                                        Address: {{order.shipping_address.address}},{{order.shipping_address.locality}},
+                                                         {{order.shipping_address.city}}, {{order.shipping_address.state}} - {{order.shipping_address.pincode}}
+                                                    </div>
+                                                    <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-255%); cursor: pointer;">
+                                                        {% for method in order.payment_methods %}
+                                                            <span style="font-size: 16px; font-weight: 500;">Payment Method: {{method|capfirst}}</span>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="address-card-header" style="position: relative; margin-bottom: 10px;">
+                                                    <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">Order Date: <strong>{{order.order_date}}</strong></span>
+                                                    <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
+                                                        <span style="font-size: 16px; font-weight: 500;">Order Amount: {{order.total_amount}}</span>
+                                                    </div>
+                                                </div>
+                                                <!-- Order Body -->
+                                            </div>
+                                            <!-- Order Card -->
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+                                    <!-- Order List-->
+                                </div>
+                            </div>
+                        <!--Manage_Order --> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- my order section-->
+            
+			<!--profile section-->
+            <div id="Profile_information" class="hidden-section">
+                <!-- Add content for Profile Information section here -->
+                <div class="col-sm-9 padding-right">
+                    <div class="left-sidebar">
+                        <div class="panel-group category-products profile-section" id="accordian">
+                        <!--personal and gender-->
+                        <div class="personal and gender">
+                            <!--Personal Information-->
+                            <div class="row" style="padding: 0px 0px 10px 0px;">
+                                <h4 style="padding-left: 4%; display: inline;">Personal Information</h4>
+                                <a id="editLink"
+                                    style="color: #ffa500; padding: 0px 10px; text-decoration: none; cursor: pointer; transition: color 0.3s;"
+                                    onclick="togglePersonalEditMode()">Edit</a>
+                            </div>
+                            <form id="profileForm" method="post" action="{% url 'user_app:update_personal_info' %}">
+                                {% csrf_token %}
+                                <div class="row" style="padding-left: 4%;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 15px;">
+                                        <!--FirstName-->
+                                        <div style="width: 29%;">
+                                            <div style="margin-bottom: 15px;">
+                                                <div style="display: flex; flex-direction: column; position: relative;">
+                                                    <div style="position: relative;">
+                                                        <!--FirstName Label-->
+                                                        <label for="firstName" id="firstNameLabel"
+                                                            style="font-size: 12px; color: #878787; font-weight: 500; position: absolute; top: 2px; left: 8px; background-color: white; padding: 4px 10px; display: none;">First
+                                                            Name  
+                                                        </label>
+                                                        <!--Firstname Label-->
+                                                        <!--Firstname input-->
+                                                        <input id="firstNameInput" type="text"
+                                                            style=" cursor: not-allowed; padding: 14px 0px 14px 20px; border: 1px solid #ccc; border-radius: 4px; transition: border-color 0.3s; width: 100%;"
+                                                            name="firstname" required="" autocomplete="name" tabindex="1"
+                                                            value="{{ user_profile.firstname|capfirst }}"
+                                                            onmouseover="this.style.borderColor='#ffa500'"
+                                                            onmouseout="this.style.borderColor='#ccc'" disabled>
+                                                        <!--Firstname input-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--LastName-->
+                                        <div style="width: 29%;">
+                                            <div style="margin-bottom: 15px;">
+                                                <div style="display: flex; flex-direction: column; position: relative;">
+                                                    <div style="position: relative;">
+                                                        <!--LastName Label-->
+                                                        <label for="lastName" id="lastNameLabel"
+                                                            style="font-size: 12px; color: #878787; font-weight: 500; position: absolute; top: 2px; left: 8px; background-color: white; padding: 4px 10px; display: none;">
+                                                            Last Name
+                                                        </label>
+                                                        <!--LastName Label-->
+                                                        <!--LastName input-->
+                                                        <input id="lastNameInput" type="text"
+                                                            style=" cursor: not-allowed; padding: 14px 0px 14px 20px; border: 1px solid #ccc; border-radius: 4px; transition: border-color 0.3s; width: 100%;"
+                                                            name="lastname" required="" autocomplete="name" tabindex="2"
+                                                            value="{{ user_profile.lastname|capfirst }}"
+                                                            onmouseover="this.style.borderColor='#ffa500'"
+                                                            onmouseout="this.style.borderColor='#ccc'" disabled>
+                                                        <!--LastName input-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                
+                                        <div style="width: 38%;">
+                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                <!--update button-->
+                                                <button id="updateButton" type="submit"
+                                                    style="background-color: #ffa500; border: none; color: white; padding: 14px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; display: none;"
+                                                    onmouseover="this.style.backgroundColor='#ff8a00'"
+                                                    onmouseout="this.style.backgroundColor='#ffa500'">Update
+                                                </button>
+                                                <!--update button-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Personal Information-->
+    
+                                <!--Gender Selection-->
+                                <div class="row" style="padding-left: 4%; margin-bottom: 30px;">
+                                    <h5 style="display: inline-block; margin-right: 10px;">Your Gender</h5>
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="display: inline-block; margin-right: 10px;">
+                                            {% if user_profile.gender == 'M' %}
+                                                <!--Gender Male input-->
+                                                <input type="radio" id="male" name="gender" value="M"
+                                                    style="transform: scale(1.5); width: 15px; height: 15px;" disabled checked>
+                                                <!--Gender Male input-->
+                                                <!--Gender Male Label-->
+                                                <label for="male"
+                                                    style="display: inline; margin-left: 5px; color: #696763; font-weight: 400;">
+                                                    Male
+                                                </label>
+                                                <!--Gender Male Label-->
+                                            {% else %}
+                                                <!--Gender Male input-->
+                                                <input type="radio" id="male" name="gender" value="M"
+                                                    style="transform: scale(1.5); width: 15px; height: 15px;" disabled >
+                                                <!--Gender Male input-->
+                                                <!--Gender Male Label-->
+                                                <label for="male"
+                                                    style="display: inline; margin-left: 5px; color: #696763; font-weight: 400;">
+                                                    Male
+                                                </label>
+                                                <!--Gender Male Label-->
+                                            {% endif %}
+                                        </div>
+                                        <div style="display: inline-block; margin-right: 10px;">
+                                            {% if user_profile.gender == 'F' %}
+                                                <!--Gender Female input-->
+                                                <input type="radio" id="female" name="gender" value="F"
+                                                    style="transform: scale(1.5); width: 15px; height: 15px;" disabled checked>
+                                                <!--Gender Female input-->
+                                                <!--Gender Female Label-->
+                                                <label for="female"
+                                                    style="display: inline; margin-left: 5px; color: #696763; font-weight: 400;">
+                                                    Female
+                                                </label>
+                                                <!--Gender Female Label-->
+                                            {% else %}
+                                                <!--Gender Female input-->
+                                                <input type="radio" id="female" name="gender" value="F"
+                                                    style="transform: scale(1.5); width: 15px; height: 15px;" disabled>
+                                                <!--Gender Female input-->
+                                                <!--Gender Female Label-->
+                                                <label for="female"
+                                                    style="display: inline; margin-left: 5px; color: #696763; font-weight: 400;">
+                                                    Female
+                                                </label>
+                                                <!--Gender Female Label-->
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Gender Selection-->
+                            </form>
+                        </div>
+                        <!--personal and gender-->
+
+                            <!-- Email Adresses -->                        
+                            <div class="row" style="padding-left: 4%;">
+                                <h4 style="display: inline-block; margin-right: 10px;">Email Address</h4>
+                                <a id="editEmailLink"
+                                    style="color: #ffa500; padding: 0px 10px; text-decoration: none; cursor: pointer; transition: color 0.3s;"
+                                    onclick="toggleEmailEditMode()">Edit</a>
+                            </div>
+                            <form id="emailForm" method="post" action="{% url 'user_app:update_email' %}">
+                                {% csrf_token %}
+                                <div class="row" style="padding-left: 4%; margin-bottom: 30px;">
+                                    <div class="email-section">
+                                        <div style="width: 50%;">
+                                            <div style="margin-bottom: 15px;">
+                                                <div style="display: flex; flex-direction: column; position: relative;">
+                                                    <div style="position: relative;">
+                                                        <label for="email" id="emailLabel"
+                                                            style="font-size: 12px; color: #878787; font-weight: 500; position: absolute; top: 2px; left: 8px; background-color: white; padding: 4px 10px; display: none;">
+                                                            Email Address</label>
+                                                        <input id="emailInput" type="email"
+                                                            style=" cursor: not-allowed; padding: 14px 0px 14px 20px; border: 1px solid #ccc; border-radius: 4px; transition: border-color 0.3s; width: 100%;"
+                                                            name="email" required="" autocomplete="email" tabindex="3"
+                                                            value="{{ user_profile.user.email }}"
+                                                            onmouseover="this.style.borderColor='#ffa500'"
+                                                            onmouseout="this.style.borderColor='#ccc'" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="width: 30%;">
+                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                <button class="email-submitbtn" id="updateEmailButton" type="submit" 
+                                                    style=""
+                                                    onmouseover="this.style.backgroundColor='#ff8a00'"
+                                                    onmouseout="this.style.backgroundColor='#ffa500'">Update Email</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Email Adresses-->
+    
+                            <!-- Mobile Number-->
+                            <div class="row" style="padding: 0px 0px 10px 0px;">
+                                <h4 style="padding-left: 4%; display: inline;">Mobile Number</h4>
+                                <a id="editMobileLink"
+                                    style="color: #ffa500; padding: 0px 10px; text-decoration: none; cursor: pointer; transition: color 0.3s;"
+                                    onclick="toggleMobileEditMode()">Edit</a>
+                            </div>
+                            <form id="contactForm" method="post" action="{% url 'user_app:update_contact' %}">
+                                {% csrf_token %}
+                                <div class="row" style="padding-left:4%;">
+                                    <div class="mobile-section">
+                                        <div style="width: 50%;">
+                                            <div style="margin-bottom: 15px;">
+                                                <div style="display: flex; flex-direction: column; position: relative;">
+                                                    <div style="position: relative;">
+                                                        <label for="mobileNumber" id="mobileNumberLabel"
+                                                            style="font-size: 12px; color: #878787; font-weight: 500; position: absolute; top: 2px; left: 8px; background-color: white; padding: 4px 10px; display: none;">Mobile
+                                                            Number</label>
+                                                        <input id="mobileNumberInput" type="text"
+                                                            style="cursor: not-allowed; padding: 14px 0px 14px 20px; border: 1px solid #ccc; border-radius: 4px; transition: border-color 0.3s; width: 100%;"
+                                                            name="mobileNumber" required="" tabindex="3"
+                                                            value="{{ user_profile.contact }}"
+                                                            onmouseover="this.style.borderColor='#ffa500'"
+                                                            onmouseout="this.style.borderColor='#ccc'" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="width: 30%;">
+                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                <button class="mobile-submitbtn" id="updateMobileButton" type="submit"
+                                                    onmouseover="this.style.backgroundColor='#ff8a00'"
+                                                    onmouseout="this.style.backgroundColor='#ffa500'">Update Mobile</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- Mobile Number-->
+    
+                            <script>
+                                function togglePersonalEditMode() {
+                                    const form = document.getElementById('profileForm');
+                                    const firstNameInput = document.getElementById('firstNameInput');
+                                    const lastNameInput = document.getElementById('lastNameInput');
+                                    const firstNameLabel = document.getElementById('firstNameLabel');
+                                    const lastNameLabel = document.getElementById('lastNameLabel');
+                                    const maleRadio = document.getElementById('male');
+                                    const femaleRadio = document.getElementById('female');
+                                    const editLink = document.getElementById('editLink');
+                                    const updateButton = document.getElementById('updateButton');
+    
+                                    if (editLink.textContent === 'Edit') {
+                                        editLink.textContent = 'Cancel';
+                                        firstNameInput.removeAttribute('disabled');
+                                        lastNameInput.removeAttribute('disabled');
+                                        firstNameLabel.style.display = 'block';
+                                        lastNameLabel.style.display = 'block';
+                                        firstNameInput.style.padding = '25px 0px 3px 20px';
+                                        lastNameInput.style.padding = '25px 0px 3px 20px';
+                                        firstNameInput.style.cursor = 'auto';
+                                        lastNameInput.style.cursor = 'auto';
+                                        maleRadio.removeAttribute('disabled');
+                                        femaleRadio.removeAttribute('disabled');
+                                        updateButton.style.display = 'block';
+                                    } else {
+                                        editLink.textContent = 'Edit';
+                                        firstNameInput.setAttribute('disabled', true);
+                                        lastNameInput.setAttribute('disabled', true);
+                                        firstNameLabel.style.display = 'none';
+                                        lastNameLabel.style.display = 'none';
+                                        firstNameInput.style.padding = '14px 0px 14px 20px';
+                                        lastNameInput.style.padding = '14px 0px 14px 20px';
+                                        firstNameInput.style.cursor = 'not-allowed';
+                                        lastNameInput.style.cursor = 'not-allowed';
+                                        maleRadio.setAttribute('disabled', true);
+                                        femaleRadio.setAttribute('disabled', true);
+                                        updateButton.style.display = 'none';
+                                    }
+                                }
+                                function toggleEmailEditMode() {
+                                    const form = document.getElementById('emailForm');
+                                    const emailInput = document.getElementById('emailInput');
+                                    const emailLabel = document.getElementById('emailLabel');
+                                    const editEmailLink = document.getElementById('editEmailLink');
+                                    const updateEmailButton = document.getElementById('updateEmailButton');
+    
+                                    if (editEmailLink.textContent === 'Edit') {
+                                        editEmailLink.textContent = 'Cancel';
+                                        emailInput.removeAttribute('disabled');
+                                        emailLabel.style.display = 'block';
+                                        emailInput.style.padding = '25px 0px 3px 20px';
+                                        emailInput.style.cursor = 'auto';
+                                        updateEmailButton.style.display = 'block';
+                                    } else {
+                                        editEmailLink.textContent = 'Edit';
+                                        emailInput.setAttribute('disabled', true);
+                                        emailLabel.style.display = 'none';
+                                        emailInput.style.padding = '14px 0px 14px 20px';
+                                        emailInput.style.cursor = 'not-allowed';
+                                        updateEmailButton.style.display = 'none';
+                                    }
+                                }
+    
+                                function toggleMobileEditMode() {
+                                    const form = document.getElementById('contactForm');
+                                    const mobileNumberInput = document.getElementById('mobileNumberInput');
+                                    const mobileNumberLabel = document.getElementById('mobileNumberLabel');
+                                    const editMobileLink = document.getElementById('editMobileLink');
+                                    const updateMobileButton = document.getElementById('updateMobileButton');
+    
+                                    if (editMobileLink.textContent === 'Edit') {
+                                        editMobileLink.textContent = 'Cancel';
+                                        mobileNumberInput.removeAttribute('disabled');
+                                        mobileNumberLabel.style.display = 'block';
+                                        mobileNumberInput.style.padding = '25px 0px 3px 20px';
+                                        mobileNumberInput.style.cursor = 'auto';
+                                        updateMobileButton.style.display = 'block';
+                                    } else {
+                                        editMobileLink.textContent = 'Edit';
+                                        mobileNumberInput.setAttribute('disabled', true);
+                                        mobileNumberLabel.style.display = 'none';
+                                        mobileNumberInput.style.padding = '14px 0px 14px 20px';
+                                        mobileNumberInput.style.cursor = 'not-allowed';
+                                        updateMobileButton.style.display = 'none';
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!--profile section-->
+            
+			<!-- Manage Address -->
+            <div id="Addresses" class="hidden-section">
+                <div class="col-sm-9 padding-right">
+                    <div class="left-sidebar">
+                        <div class="panel-group category-products address-section" id="accordian">
+                        <!-- Manage Adresses -->
+                            <div class="row" style="padding-left: 4%;">
+                                <h4 style="display: inline-block; margin-right: 10px;">Manage Addresses</h4>
+                            </div>
+                            
+                            <div class="row" style="padding-left: 4%; margin-bottom: 30px;">
+                                <div
+                                    style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 15px;">
+                                    <div style="width: 97%;">
+                                        <div style="margin-bottom: 15px;">
+                                            <div style="display: flex; flex-direction: column; position: relative;">
+                                                <div style="position: relative;">
+                                                    <div id="container">
+                                                        <!-- ADD A NEW ADDRESS -->
+                                                        <div style="border: 1px solid rgb(204, 204, 204); cursor:pointer;" id="clickableDiv" onclick="toggleSection()">
+                                                            <div class="row">
+                                                                <div class="col-sm-1" style="padding-left: 30px;">
+                                                                    <div class="view-product">
+                                                                        <i class="fa fa-plus" style="font-size: x-large; color:#FE980f; margin-top:10px;"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-11" style="padding:0px;">
+                                                                    <h5 class="new-address-heading" >ADD A NEW ADDRESSES</h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- ADD A NEW ADDRESS -->
+                                                    </div>
+                                                    
+                                                    <!-- ADDRESS LISTS -->
+													{% for address in user_addresses %}
+														<div class="address-container" style="border: 1px solid rgb(204, 204, 204); margin-top: 2%;">
+															<!-- address detail -->
+															<div class="address-card" style="position: relative;">
+																<div class="address-card-header" style="position: relative; margin-top: 2%;">
+																	<span class="address-type" style="margin: 35px 0px 10px 18px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; color: #878787; background-color: #f0f0f0;">{{address.addresstype}}</span>
+
+																	<!-- Vertical Three Dots Icon -->
+																	<div class="options" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
+																		<div style="display: block; width: 4px; height: 4px; background-color: #878787; border-radius: 50%; margin: 3px auto;"></div>
+																		<div style="display: block; width: 4px; height: 4px; background-color: #878787; border-radius: 50%; margin: 3px auto;"></div>
+																		<div style="display: block; width: 4px; height: 4px; background-color: #878787; border-radius: 50%; margin: 3px auto;"></div>
+																	</div>
+																	<!-- Edit and Delete Options -->
+																	<div class="edit-delete-options" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background-color: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); padding: 5px; text-align: center;">
+																		<div class="edit-option" style="cursor: pointer; padding: 5px; color: #FE980f;">Edit</div>
+																		<div class="delete-option" style="cursor: pointer; padding: 5px; color: #FE980f;">
+																			<a style="color: #FE980f;"href="{% url 'user_app:delete_address' address.id %}">Delete</a>
+																		</div>
+																	</div>
+																</div>
+																<!-- Address Card Body -->
+																<div class="address-card-body" style="margin-top: 10px; padding-left: 2%;">
+																	<!-- Name and Mobile Number in the Same Row -->
+																	<div class="row" style="margin-bottom: 10px;">
+																		<div class="col-md-3">
+																			<div style="font-size: 16px; font-weight: 500; color: #212121;">{{address.name | capfirst}}</div> <!-- Replace with the actual name value -->
+																		</div>
+																		<div class="col-md-6">
+																			<div style="font-size: 16px; font-weight: 500; color: #212121;">{{address.contact}}</div> <!-- Replace with the actual mobile number value -->
+																		</div>
+																	</div>
+
+																	<!-- Address -->
+																	<div class="row" style="margin-bottom: 10px;">
+																		<div class="col-md-12">
+																			<div style="font-size: 14px; font-weight: 400; color: #212121;">{{address.address}}</div> <!-- Replace with the actual address value -->
+																		</div>
+																	</div>
+
+																	<!-- Locality, City, State, and Pincode in the Same Row -->
+																	<div class="row" style="margin-bottom: 10px;">
+																		<div class="col-md-12">
+																			<div style="font-size: 14px; font-weight: 400; color: #212121;">
+																				{{address.locality}}, {{address.city}}, {{address.state}} - <strong>{{address.pincode}}</strong>
+																			</div> <!-- Replace with the actual locality value -->
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<!-- address detail -->
+
+															<!-- open form when click on edit -->
+															<div class="edit-section" style="display: none; padding: 10px; background-color: #ffe5bc;">
+																<!-- form for edit in already have address -->
+																<form class="edit-form" method="post" action="{% url 'user_app:edit_address' address.id %}">
+																	{% csrf_token %}
+
+																	<!-- First Row: Name and Mobile Number -->
+																	<div class="row">
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="name" value="{{address.name}}" class="form-control" required placeholder="Name">
+																			</div>
+																		</div>
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="mobile" value="{{address.contact}}" class="form-control" required placeholder="10-digit mobile number">
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- Second Row: Pincode and Locality -->
+																	<div class="row">
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="pincode" value="{{address.pincode}}" class="form-control" placeholder="Pincode">
+																			</div>
+																		</div>
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="locality" value="{{address.locality}}" class="form-control" placeholder="Locality">
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- Third Row: Address -->
+																	<div class="row">
+																		<div class="col-md-12">
+																			<div class="form-group">
+																				<textarea name="address"  class="form-control" rows="4" placeholder="Address(Area and Street)">{{address.address}}</textarea>
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- Fourth Row: City and State -->
+																	<div class="row">
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="city" value="{{address.city}}" class="form-control" placeholder="City/District/Town">
+																			</div>
+																		</div>
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<select name="state" class="form-control">
+																					{% if address.state %}
+																					<option value="{{address.state}}" selected>{{address.state}}</option>
+																					{%else%}
+																					<option value="" disabled selected hidden>Select State</option>
+																					{% endif %}
+																					<option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                                                    <option value="Andman & Nicobar">Andman & Nicobar</option>
+                                                                                    <option value="Assam">Assam</option>
+                                                                                    <option value="Bihar">Bihar</option>
+                                                                                    <option value="Chandigarh">Chandigarh</option>
+                                                                                    <option value="Chattisgadh">Chattisgadh</option>
+                                                                                    <option value="Dadra Nagar">Dadra Nagar</option>
+                                                                                    <option value="Daman & Diu">Daman & Diu</option>
+                                                                                    <option value="Delhi">Delhi</option>
+                                                                                    <option value="Goa">Goa</option>
+                                                                                    <option value="Gujrat">Gujrat</option>
+                                                                                    <option value="Haryana">Haryana</option>
+                                                                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                                                    <option value="Jammu">Jammu</option>
+                                                                                    <option value="Jarkhand">Jarkhand</option>
+                                                                                    <option value="Karnataka">Karnataka</option>
+                                                                                    <option value="Kerala">Kerala</option>
+                                                                                    <option value="Ladakh">Ladakh</option>
+                                                                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                                                    <option value="Manipur">Manipur</option>
+                                                                                    <option value="Maharashtra">Maharashtra</option>
+                                                                                    <option value="Meghalaya">Meghalaya</option>
+                                                                                    <option value="Mizoram">Mizoram</option>
+                                                                                    <option value="Nagaland">Nagaland</option>
+                                                                                    <option value="Odhisha">Odhisha</option>
+                                                                                    <option value="Punjab">Punjab</option>
+                                                                                    <option value="Rajasthan">Rajasthan</option>
+                                                                                    <option value="Sikkim">Sikkim</option>
+                                                                                    <option value="Tripura">Tripura</option>
+                                                                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                                                                    <option value="Telgana">Telgana</option>
+                                                                                    <option value="Utar Pradesh">Utar Pradesh</option>
+                                                                                    <option value="Utrakhand">Utrakhand</option>
+                                                                                    <option value="West Benagal">West Benagal</option>
+																					<!-- Add more state options -->
+																				</select>
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- Fifth Row: Landmark and Optional Number -->
+																	<div class="row">
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="landmark" value="{{address.landmark}}" class="form-control" placeholder="Landmark">
+																			</div>
+																		</div>
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<input type="text" name="optionalNumber"  value="{{address.optionalnumber}}" class="form-control" placeholder="Optional Number">
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- Sixth Row: Address Type -->
+																	<div class="row">
+																		<div class="col-md-12">
+																			<div class="form-group">
+																				<label for="addressType" style="font-size: 14px; font-weight: 500; color: #878787;">Address Type</label>
+																				<div>
+																					{% if address.addresstype == 'Home' %}
+																						<input type="radio" id="home" name="addressType" value="Home" class="form-check-input" style="margin-right: 5px;" checked>
+																						<label for="home" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">Home</label>
+																					{%else%}
+																						<input type="radio" id="home" name="addressType" value="Home" class="form-check-input" style="margin-right: 5px;">
+																						<label for="home" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">Home</label>
+																					{% endif %}
+																					{% if address.addresstype == 'Work' %}
+																						<input type="radio" id="work" name="addressType" value="Work" class="form-check-input" style="margin-right: 5px; margin-left:5%;" checked>
+																						<label for="work" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">Work</label>
+																					{% else %}
+																						<input type="radio" id="work" name="addressType" value="Work" class="form-check-input" style="margin-right: 5px; margin-left:5%;">
+																						<label for="work" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">Work</label>
+																					{% endif %}
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+
+																	<!-- Seventh Row: Submit and Cancel Buttons -->
+																	<div class="row">
+																		<div class="col-md-12">
+																			<button type="submit" class="btn btn-primary" style="padding: 12px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; background-color: #ff6d00; border: none; color: white;">Submit</button>
+																			<button type="button" class="btn btn-secondary cancel-button" style="margin: 16px 0px 0px 10px; padding: 12px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; background-color: #cccccc0d; border: none; color: #fe980f;">Cancel</button>
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</div>
+													{% endfor %}
+                                                    <!--ADDRESS LISTS -->
+
+                                                    <!-- JavaScript to Show Edit and Delete Options on Hover and Make Them Clickable -->
+                                                    <script>
+                                                        const addressContainers = document.querySelectorAll('.address-container');
+
+                                                        addressContainers.forEach((container, index) => {
+                                                            const optionsIcon = container.querySelector('.options');
+                                                            const editDeleteOptions = container.querySelector('.edit-delete-options');
+                                                            const editOption = container.querySelector('.edit-option');
+                                                            const deleteOption = container.querySelector('.delete-option');
+                                                            const editSection = container.querySelector('.edit-section');
+                                                            const addressCard = container.querySelector('.address-card');
+                                                            const cancelButton = container.querySelector('.cancel-button');
+
+                                                            optionsIcon.addEventListener('mouseenter', () => {
+                                                                editDeleteOptions.style.display = 'block';
+                                                            });
+
+                                                            editDeleteOptions.addEventListener('mouseleave', () => {
+                                                                editDeleteOptions.style.display = 'none';
+                                                            });
+
+                                                            editOption.addEventListener('click', () => {
+                                                                // Show the custom edit section and hide the address card
+                                                                editSection.style.display = 'block';
+                                                                addressCard.style.display = 'none';
+                                                            });
+
+                                                            deleteOption.addEventListener('click', () => {
+                                                                // Handle the click on "Delete" option here
+                                                                //alert(`Delete option clicked for card ${index + 1}`);
+                                                            });
+
+                                                            cancelButton.addEventListener('click', () => {
+                                                                // Handle the click on "Cancel" button here
+                                                                replaceWithAddressCard();
+                                                            });
+
+                                                            function replaceWithAddressCard() {
+                                                                // Show the address card and hide the edit form
+                                                                editSection.style.display = 'none';
+                                                                addressCard.style.display = 'block';
+                                                            }
+                                                        });
+                                                    </script>
+                                                    
+                                                    <!-- script for add new address new section form -->
+                                                    <script>
+                                                        var originalDiv = document.getElementById('clickableDiv');
+                                                        var newSection = null;
+                                                    
+                                                        function toggleSection() {
+                                                            if (newSection === null) {
+                                                                // Create the new section
+                                                                newSection = document.createElement('div');
+                                                                newSection.style.border = '1px solid rgb(204, 204, 204)';
+                                                                newSection.style.padding = '10px';
+                                                                newSection.style.backgroundColor = '#ffe5bc';
+                                                    
+                                                                // Set the inner HTML of the new section to your desired HTML content
+                                                                newSection.innerHTML = `
+                                                                <div class="row " style="padding-left: 2%;">
+                                                                    <h4 class="add-new-address-heading" style="display: inline-block; margin-right: 10px; color:#FE980f;">ADD A NEW ADDRESSES</h4>
+                                                                </div>
+                                                                <form id="profileForm" method="post" action="{% url 'user_app:add_address' %}">
+                                                                    {% csrf_token %}
+
+                                                                    <!-- First Row: Name and Mobile Number -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="name" type="text" name="name" class="form-control" required placeholder="Name" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="mobile" type="text" name="mobile" class="form-control" required placeholder="10-digit mobile number" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Second Row: Pincode and Locality -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="pincode" type="text" name="pincode" class="form-control" placeholder="Pincode" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="locality" type="text" name="locality" class="form-control" placeholder="Locality" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Third Row: Address -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <textarea id="address" name="address" class="form-control" rows="4" placeholder="Address(Area and Street)" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Fourth Row: City and State -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="city" type="text" name="city" class="form-control" placeholder="City/District/Town" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <select id="state" name="state" class="form-control" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 12px;">
+                                                                                    <option value="" disabled selected hidden>Select State</option> <!-- Default label -->
+                                                                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                                                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                                                                    <option value="Andman & Nicobar">Andman & Nicobar</option>
+                                                                                    <option value="Assam">Assam</option>
+                                                                                    <option value="Bihar">Bihar</option>
+                                                                                    <option value="Chandigarh">Chandigarh</option>
+                                                                                    <option value="Chattisgadh">Chattisgadh</option>
+                                                                                    <option value="Dadra Nagar">Dadra Nagar</option>
+                                                                                    <option value="Daman & Diu">Daman & Diu</option>
+                                                                                    <option value="Delhi">Delhi</option>
+                                                                                    <option value="Goa">Goa</option>
+                                                                                    <option value="Gujrat">Gujrat</option>
+                                                                                    <option value="Haryana">Haryana</option>
+                                                                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                                                                    <option value="Jammu">Jammu</option>
+                                                                                    <option value="Jarkhand">Jarkhand</option>
+                                                                                    <option value="Karnataka">Karnataka</option>
+                                                                                    <option value="Kerala">Kerala</option>
+                                                                                    <option value="Ladakh">Ladakh</option>
+                                                                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                                                    <option value="Manipur">Manipur</option>
+                                                                                    <option value="Maharashtra">Maharashtra</option>
+                                                                                    <option value="Meghalaya">Meghalaya</option>
+                                                                                    <option value="Mizoram">Mizoram</option>
+                                                                                    <option value="Nagaland">Nagaland</option>
+                                                                                    <option value="Odhisha">Odhisha</option>
+                                                                                    <option value="Punjab">Punjab</option>
+                                                                                    <option value="Rajasthan">Rajasthan</option>
+                                                                                    <option value="Sikkim">Sikkim</option>
+                                                                                    <option value="Tripura">Tripura</option>
+                                                                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                                                                    <option value="Telgana">Telgana</option>
+                                                                                    <option value="Utar Pradesh">Utar Pradesh</option>
+                                                                                    <option value="Utrakhand">Utrakhand</option>
+                                                                                    <option value="West Benagal">West Benagal</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <!-- Fifth Row: Landmark and Optional Number -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="landmark" type="text" name="landmark" class="form-control" placeholder="Landmark" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <input id="optionalNumber" type="text" name="optionalNumber" class="form-control" placeholder="Optional Number" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; transition: border-color 0.3s; font-size: 14px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Sixth Row: Address Type -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="addressType" style="font-size: 14px; font-weight: 500; color: #878787;">Address Type</label>
+                                                                                <div>
+                                                                                    <input type="radio" id="home" name="addressType" value="Home" class="form-check-input" style="margin-right: 5px;">
+                                                                                    <label for="home" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">Home</label>
+                                                                                    <input type="radio" id="work" name="addressType" value="Work" class="form-check-input" style="margin-right: 5px; margin-left:5%;">
+                                                                                    <label for="work" class="form-check-label" style="font-size: 14px; font-weight: 500; color: #878787;">Work</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <!-- Seventh Row: Submit and Cancel Buttons -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <button id="submitButton" type="submit" class="btn btn-primary" style="padding: 12px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; background-color: #ff6d00; border: none; color: white;">Submit</button>
+                                                                            <button id="cancelButton" onclick="toggleSection()" type="button" class="btn btn-secondary" style="margin: 16px 0px 0px 10px; padding: 12px 20px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; background-color: #cccccc0d; border: none; color: #fe980f;">Cancel</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+
+                                                                `;
+                                                                
+                                                                // Replace the original div with the new section
+                                                                originalDiv.style.display = 'none';
+                                                                originalDiv.parentElement.appendChild(newSection);
+                                                            } else {
+                                                                // Remove the new section and show the original div
+                                                                originalDiv.style.display = 'block';
+                                                                newSection.parentElement.removeChild(newSection);
+                                                                newSection = null;
+                                                            }
+                                                        }
+                                                    </script>
+                                                    <!-- script for add new address new section form -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+						<!-- Manage Adresses-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!-- Manage Address -->
+            <!--right part-->
+        </div>
+	</div>
+
+    <!-- css for link design -->
+    <style>
+		/* Style for the clickable links and hover effect */
+		.clickable-link {
+			font-size: medium;
+			margin-top: 5px;
+			color: #878787;
+			text-decoration: none;
+		}
+		
+		.clickable-link:hover {
+			color: orange;
+		}
+		
+		/* Style for the sections to hide/show */
+		.hidden-section {
+			display: none;
+		}
+    </style>
+    
+	<!-- scripts for left part link management and right side dynamic section manage -->
+    <script>
+    // JavaScript to handle the click event and show/hide sections
+        const links = document.querySelectorAll('.clickable-link');
+        const sections = document.querySelectorAll('.hidden-section');
+
+        links.forEach(link => {
+            link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show the target section
+            targetSection.style.display = 'block';
+
+            // Update link colors
+            links.forEach(link => {
+                if (link.getAttribute('href').substring(1) === targetId) {
+                link.style.color = 'orange';
+                } else {
+                link.style.color = '#878787';
+                }
+            });
+
+            // Store the selected section in localStorage
+            localStorage.setItem('selectedSection', targetId);
+            });
+        });
+
+        // Retrieve and show the stored section (if any) on page load
+        const selectedSection = localStorage.getItem('selectedSection');
+        if (selectedSection) {
+            const targetSection = document.getElementById(selectedSection);
+            if (targetSection) {
+            targetSection.style.display = 'block';
+            document.querySelector(`[href="#${selectedSection}"]`).style.color = 'orange';
+            }
+        }
+    </script>
+      
+</section>
+<!--main content-->
+{% endblock content %}

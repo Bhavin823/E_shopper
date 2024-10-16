@@ -1,0 +1,159 @@
+{% extends 'base_app/base.html' %}
+{% load static %}
+{% block content %}
+{% load humanize %}
+{% load custom_filters %}
+
+
+<section class="order-tracking-section-new">
+    <div class="container-new">
+      <div class="order-tracking-content-new">
+        <div class="order-details-new">
+          <div class="order-details-header-new">
+            <h3 class="order-details-title-new">Order Details</h3>
+            <a class="download-invoice-btn-new" href="{% url 'order_app:invoice' my_order.id %}">Download Invoice</a>
+          </div>
+          <div class="order-details-content-new">
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">Order Id</h6>
+              <h4 class="order-info-value-new">#{{my_order.id}}</h4>
+            </div>
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">Order Placed</h6>
+              <h4 class="order-info-value-new">{{ my_order.order_date|date:"M d, Y" }}</h4>
+            </div>
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">Order Delivered</h6>
+              <h4 class="order-info-value-new">Exp {{ my_order.expected_delivery_date|date:"M d, Y" }}</h4>
+            </div>
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">No of Items</h6>
+              <h4 class="order-info-value-new">{{no_of_item}} items</h4>
+            </div>
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">Payment</h6>
+              <h4 class="order-info-value-new">{{my_order.payment_type}}</h4>
+            </div>
+            {% if my_order.payment_type == 'Online' %}
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">Method</h6>
+                {% for method in  my_order.payment_methods %}
+                  {% if forloop.last %}
+                      <h4 class="order-info-value-new">{{ method|capfirst }}</h4>
+                  {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="order-info-new">
+              <h6 class="order-info-title-new">Status</h6>
+              <h4 class="order-info-value-new">{{my_order.status|capfirst}}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="order-tracking-new">
+          <div class="order-tracking-header-new order-tracking-header-title-new">
+            <h3 class="order-tracking-title-new">Order Tracking</h3>
+            <h3 class="order-tracking-id-new">Order ID: #{{my_order.id}}</h3>
+          </div>
+          <div class="order-tracking-timeline-new">
+            <ol class="timeline-list-new">
+              <li class="timeline-item-new completed">
+                <div class="timeline-item-content-new">
+                  <span class="timeline-step-new">1</span>Order Placed
+                  <span class="timeline-date-new">{{ my_order.order_date|date:"M d, Y" }}</span>
+                </div>
+              </li>
+              <li class="timeline-item-new completed">
+                <div class="timeline-item-content-new">
+                  <span class="timeline-step-new">2</span>Order Packed
+                  <span class="timeline-date-new">{{ my_order.order_date|add_days:2|date:"M d, Y"}}</span>
+                </div>
+              </li>
+              <li class="timeline-item-new active">
+                <div class="timeline-item-content-new">
+                  <span class="timeline-step-new">3</span>Order Shipped
+                  <span class="timeline-date-new">{{ my_order.order_date|add_days:4|date:"M d, Y"}}</span>
+                </div>
+              </li>
+              <li class="timeline-item-new">
+                <div class="timeline-item-content-new">
+                  <span class="timeline-step-new">4</span>Delivered
+                  <span class="timeline-date-new">{{my_order.expected_delivery_date|date:"M d, Y"}}</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div class="order-items-new">
+          <h3 class="order-items-title-new">Items from the order</h3>
+          <div class="order-items-list-new">
+            <div class="order-items-header-new">
+              <span class="order-items-product-new">Product</span>
+              <div class="order-items-header-list-new">
+                <span class="order-items-size-new">Size</span>
+                <span class="order-items-price-new">Price</span>
+                <span class="order-items-quantity-new">Quantity</span>
+                <span class="order-items-size-new">Total</span>
+              </div>
+            </div>
+            {% for item in my_order_item_detail %}
+            <div class="order-item-new">
+              <div class="order-item-info-new">
+                <div class="order-item-image-new">
+                  <a href="{% url 'product_app:productdetail' item.product.slug %}">
+                    <img
+                      src="{{ item.product.ProductImage.url }}"
+                      alt="{{ item.product.ProductName }}"
+                      />
+                  </a>
+                </div>
+                <div class="order-item-details-new">
+                  <h4 class="order-item-name-new">
+                    <a href="{% url 'product_app:productdetail' item.product.slug %}">
+                    {{item.product.ProductName}}
+                    </a>
+                  </h4>
+                  <h5 class="order-item-id-new">Product ID: {{item.product.id}}</h5>
+                </div>
+              </div>
+              <div class="order-item-options-new">
+                {% if item.size %}
+                  <h5 class="order-item-size-new">{{item.size.size}}</h5>
+                {% else %}  
+                  <h5 class="order-item-size-new"></h5>
+                {% endif %}
+                <h5 class="order-item-price-new">{{ item.price|floatformat:"-2"|intcomma }}</h5>
+                <h5 class="order-item-size-new">{{item.quantity}} Qty</h5>
+                <h5 class="order-item-price-new">{{ item.subtotal|floatformat:"-2"|intcomma}}</h5>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="order-summary-new">
+          <div class="order-summary-container-new">
+            <div class="order-summary-item-new">
+              <h4 class="summary-label-new">Discount</h4>
+              <h4 class="summary-value-new">Rs. 0</h4>
+            </div>
+            <div class="order-summary-item-new">
+              <h4 class="summary-label-new">Delivery</h4>
+              <h4 class="summary-value-new">Rs. {{ shipping_cost }}</h4>
+            </div>
+          </div>
+          <div class="order-summary-container-new">
+            <div class="order-summary-item-new">
+              <h4 class="summary-label-new">Subtotal</h4>
+              <h4 class="summary-value-new">Rs. {{ total_order_amount|floatformat:"-2"|intcomma }}</h4>
+            </div>
+            <div class="order-summary-item-new">
+              <h4 class="summary-label-new">Total</h4>
+              <h4 class="summary-value-new">Rs. {{ total_order_amount|add:shipping_cost|intcomma }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock content %}
