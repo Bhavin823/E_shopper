@@ -31,7 +31,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app']
 
 
 # Application definition
@@ -52,8 +52,6 @@ INSTALLED_APPS = [
     'order_app',
     'payment_app',
     
-
-
 ]
 
 MIDDLEWARE = [
@@ -99,6 +97,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# database setup for vercel
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(default=config('DATABASE_URL'))
 
 # DATABASES = {
 #     'default': {
@@ -148,16 +150,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-
-
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-    ]
-
+# vercel statis config
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static') 
+STATIC_URL = '/staticfiles/' 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+###############
+# default project staitc and media setting
+# STATIC_URL = 'static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+##############
 
 
 # Default primary key field type
