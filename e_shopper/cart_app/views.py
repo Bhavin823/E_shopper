@@ -3,20 +3,26 @@ from django.contrib.auth.decorators import login_required
 from product_app.models import ProductModel,ProductSize
 from cart_app.models import CartItemModel,CartModel
 from user_app.models import UserProfile ,UserAddress
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
 
 # total cart quantity
 def cart_total_quantity(request):
-    if request.user.is_authenticated:
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        # If the user is not logged in, set total quantity to 0
+        return 0
+    try:
         cart = CartModel.objects.get(user=request.user)
-        quantity = 0
         for item in cart.items.all():
             # print(item.quantity)
             quantity = quantity+item.quantity
         # print(quantity)
-        return quantity
+    except ObjectDoesNotExist:
+        quantity = 0
+    return quantity
 
 # this function work for specified subcategory product page,all product page,productdetail page
 @login_required
