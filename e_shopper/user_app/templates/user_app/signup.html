@@ -12,7 +12,7 @@
                     <h2>New User Signup!</h2>
                     <form method="post" action="{% url 'user_app:signuphandle' %}">
                         {% csrf_token %}
-                        <input type="text" name="name" id="name" placeholder="Your Name" style="color: black;"
+                        <input type="text" name="name" id="name" placeholder="Username" style="color: black;"
                             required />
                         <input type="email" name="email" id="email" placeholder="Email Address" style="color: black;"
                             required />
