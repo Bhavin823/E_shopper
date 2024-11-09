@@ -50,7 +50,7 @@
                                 <!-- Address Card -->
                                 <div class="address-card" style="position: relative; transform-style: preserve-3d; transition: transform 0.2s;">
                                     <!-- Address Header -->
-                                    <div class="address-card-header" style="position: relative; margin-top: 2%;">
+                                    <div class="address-card-header" style="position: relative; margin-top: 4%;">
                                         <span class="address-type" style="margin: 35px 0px 10px 18px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; color: #878787; background-color: #f0f0f0;">{{address.addresstype}}</span>
                                         <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
                                             <input class="form-check-input" type="radio" name="address_id" id="custadd{{forloop.counter}}" value="{{address.id}}" required>
@@ -90,6 +90,14 @@
                         {% endfor %}
                         <!-- Address List-->
                     </div>
+                </div>
+                <div style="border:1px solid rgb(204,204,204); width:94%; margin: 0 0 4% 2%; cursor:pointer;">
+                    <h5 style="margin-left: 2%; font-size:18px;">
+                        <a style="color: #FE980F;"
+                            href="{% url 'user_app:profile' %}?section=Addresses" class="clickable-link">
+                            Manage Addresses
+                        </a>
+                    </h5>
                 </div>
             </div>
             <!--Address Part-->
