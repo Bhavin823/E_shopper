@@ -32,18 +32,25 @@ def ProductView(request,subcatslug):
     cart_total_quan = cart_total_quantity(request) # cart total quantity
 
     if request.user.is_authenticated:
-        for product in products:
-            product.quantity_in_cart = 0  # Default value if not in cart
-            for item in request.user.cartmodel.items.all():
-                if item.product == product:
-                    product.quantity_in_cart = item.quantity
+        if hasattr(request.user, 'cartmodel'):
+            for product in products:
+                product.quantity_in_cart = 0  # Default value if not in cart
+                for item in request.user.cartmodel.items.all():
+                    if item.product == product:
+                        product.quantity_in_cart = item.quantity
 
-        for product in product_with_same_category:
-            product.quantity_in_cart = 0  # Default value if not in cart
-            for item in request.user.cartmodel.items.all():
-                if item.product == product:
-                    product.quantity_in_cart = item.quantity
+            for product in product_with_same_category:
+                product.quantity_in_cart = 0  # Default value if not in cart
+                for item in request.user.cartmodel.items.all():
+                    if item.product == product:
+                        product.quantity_in_cart = item.quantity
+        else:
+            # Handle the case where the user has no cartmodel
+            for product in products:
+                product.quantity_in_cart = 0
 
+            for product in product_with_same_category:
+                product.quantity_in_cart = 0
     
     
     context = {
@@ -69,40 +76,47 @@ def ProductDetailView(request, productslug):
     cart_item = None  # Default value if user is not logged in
 
     if request.user.is_authenticated:
-        try:
-            cart_item = CartItemModel.objects.get(user=request.user, product=productdetail)
-        except CartItemModel.DoesNotExist:
-            cart_item = None
-
-        cart_total_quan = cart_total_quantity(request)  # cart total quantity
-        productdetail.quantity_in_cart = 0
-        for item in request.user.cartmodel.items.filter(product=productdetail):
-            productdetail.quantity_in_cart += item.quantity
-
-        for product in product_with_same_subcategory:
-            product.quantity_in_cart = 0  # Default value if not in cart
-            for item in request.user.cartmodel.items.filter(product=product):
-                product.quantity_in_cart += item.quantity
-
-        # Find the cart item with the specific size
-        selected_size_id = request.GET.get('size', '')
-        if selected_size_id:
-            # If a size is provided, get the corresponding ProductSize object
-            selected_size = get_object_or_404(ProductSize, id=selected_size_id)
+        # Ensure the user has a cartmodel instance
+        if hasattr(request.user, 'cartmodel'):
             try:
-                # Try to find the cart item with the specified size
-                cart_item = CartItemModel.objects.get(user=request.user, product=productdetail, size=selected_size)
+                cart_item = CartItemModel.objects.get(user=request.user, product=productdetail)
             except CartItemModel.DoesNotExist:
                 cart_item = None
-        else:
-            # If no size is provided, find if any size is in the cart
-            for size in available_sizes:
+
+            cart_total_quan = cart_total_quantity(request)  # cart total quantity
+            productdetail.quantity_in_cart = 0
+            for item in request.user.cartmodel.items.filter(product=productdetail):
+                productdetail.quantity_in_cart += item.quantity
+
+            for product in product_with_same_subcategory:
+                product.quantity_in_cart = 0  # Default value if not in cart
+                for item in request.user.cartmodel.items.filter(product=product):
+                    product.quantity_in_cart += item.quantity
+
+            # Find the cart item with the specific size
+            selected_size_id = request.GET.get('size', '')
+            if selected_size_id:
+                # If a size is provided, get the corresponding ProductSize object
+                selected_size = get_object_or_404(ProductSize, id=selected_size_id)
                 try:
-                    cart_item = CartItemModel.objects.get(user=request.user, product=productdetail, size=size)
-                    if cart_item:
-                        break
+                    # Try to find the cart item with the specified size
+                    cart_item = CartItemModel.objects.get(user=request.user, product=productdetail, size=selected_size)
                 except CartItemModel.DoesNotExist:
-                    continue
+                    cart_item = None
+            else:
+                # If no size is provided, find if any size is in the cart
+                for size in available_sizes:
+                    try:
+                        cart_item = CartItemModel.objects.get(user=request.user, product=productdetail, size=size)
+                        if cart_item:
+                            break
+                    except CartItemModel.DoesNotExist:
+                        continue
+        else:
+            # If the user has no cartmodel, set quantity_in_cart to 0 by default
+            productdetail.quantity_in_cart = 0
+            for product in product_with_same_subcategory:
+                product.quantity_in_cart = 0
     
     context = {
         'cat_sub_nav': cat_subcat_for_nav,
