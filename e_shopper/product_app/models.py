@@ -1,13 +1,14 @@
 from django.db import models
 from django.utils.text import slugify
 from category_app.models import CategoryModel,SubCategoryModel
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 # Create your models here.
 
 
 class ProductModel(models.Model):
     ProductName = models.CharField(max_length=100)
-    ProductImage = models.ImageField(blank=True,upload_to='product/')
+    ProductImage = models.ImageField(blank=True,storage=MediaCloudinaryStorage(),upload_to='product/')
     category = models.ForeignKey(CategoryModel,on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategoryModel,on_delete=models.CASCADE)
     brandName = models.CharField(max_length=100)
@@ -19,9 +20,19 @@ class ProductModel(models.Model):
     slug = models.SlugField(unique=True, max_length=100, blank=True, editable=False)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.ProductName)  # Generate slug from product name
+        if not self.slug:
+            # Generate the initial slug
+            self.slug = slugify(self.ProductName)
+
+        # Check if the slug already exists and make it unique if necessary
+        original_slug = self.slug
+        counter = 1
+        while ProductModel.objects.filter(slug=self.slug).exists():
+            self.slug = f"{original_slug}-{counter}"
+            counter += 1
+
         super(ProductModel, self).save(*args, **kwargs)
-    
+
     def delete(self, *args, **kwargs):
         self.is_active = False
         self.save()
