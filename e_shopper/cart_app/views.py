@@ -16,13 +16,15 @@ def cart_total_quantity(request):
         return 0
     try:
         cart = CartModel.objects.get(user=request.user)
+        quantity = 0
         for item in cart.items.all():
             # print(item.quantity)
             quantity = quantity+item.quantity
         # print(quantity)
+        return quantity
     except ObjectDoesNotExist:
         quantity = 0
-    return quantity
+        return quantity
 
 # this function work for specified subcategory product page,all product page,productdetail page
 @login_required
