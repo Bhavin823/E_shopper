@@ -128,149 +128,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                {% endfor %}
-                                {% comment %} <div class="order-container">
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <span>Order Id</span>
-                                            <span>Date</span>
-                                            <span>Payment</span>
-                                            <span>Method</span>
-                                            <span>Status</span>
-                                            <span>Total</span>
-                                            <span></span>
-                                        </div>
-                                        <div class="order-content">
-                                            <span class="order-number">#25658</span>
-                                            <span class="order-item-name">12/12/2024</span>
-                                            <span class="payment-status paid">Paid</span>
-                                            <span class="order-payment">Credit Card</span>
-                                            <span class="order-status received">Received</span>
-                                            <span class="order-total">Rs. 50</span>
-                                            <a href="#" class="view-product">View Product &raquo;</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="order-container">
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <span>Order Id</span>
-                                            <span>Date</span>
-                                            <span>Payment</span>
-                                            <span>Method</span>
-                                            <span>Status</span>
-                                            <span>Total</span>
-                                            <span></span>
-                                        </div>
-                                        <div class="order-content">
-                                            <span class="order-number">#78901</span>
-                                            <span class="order-item-name">13/12/2024</span>
-                                            <span class="payment-status paid">Paid</span>
-                                            <span class="order-payment">PayPal</span>
-                                            <span class="order-status shipped">Shipped</span>
-                                            <span class="order-total">Rs. 30</span>
-                                            <a href="#" class="view-product">View Product &raquo;</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="order-container">
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <span>Order Id</span>
-                                            <span>Date</span>
-                                            <span>Payment</span>
-                                            <span>Method</span>
-                                            <span>Status</span>
-                                            <span>Total</span>
-                                            <span></span>
-                                        </div>
-                                        <div class="order-content">
-                                            <span class="order-number">#34567</span>
-                                            <span class="order-item-name">14/12/2024</span>
-                                            <span class="payment-status paid">Paid</span>
-                                            <span class="order-payment">Debit Card</span>
-                                            <span class="order-status delivered">Delivered</span>
-                                            <span class="order-total">Rs. 40</span>
-                                            <a href="#" class="view-product">View Product &raquo;</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="order-container">
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <span>Order Id</span>
-                                            <span>Date</span>
-                                            <span>Payment</span>
-                                            <span>Method</span>
-                                            <span>Status</span>
-                                            <span>Total</span>
-                                            <span></span>
-                                        </div>
-                                        <div class="order-content">
-                                            <span class="order-number">#45678</span>
-                                            <span class="order-item-name">15/12/2024</span>
-                                            <span class="payment-status failed">Failed</span>
-                                            <span class="order-payment">Online</span>
-                                            <span class="order-status cancelled">Cancelled</span>
-                                            <span class="order-total">Rs. 60</span>
-                                            <a href="#" class="view-product">View Product &raquo;</a>
-                                        </div>
-                                    </div>
-                                </div> {% endcomment %}
+                                {% endfor %}    
                             </div>
-                            
-                            
-                                
-                            
-                        {% comment %} <!-- Manage Order -->
-                            <div class="row" style="padding-left: 4%;">
-                                <h4 style="display: inline-block; margin-right: 10px;">My Orders</h4>
-                            </div>
-                            <div class="row" style="padding-left: 2%; margin-bottom: 0px; display: flex; justify-content: space-between; width: 100%;">
-                                <div style="width: 97%; margin-bottom: 15px; display: flex; flex-direction: column; position: relative;">
-                                    <!-- Order List-->
-                                    {% for order in my_order %}
-                                    <a href="{% url 'order_app:order_detail' order.id %}" style="text-decoration: none; color: #555;">
-                                        <div class="order-container" style="border: 1px solid rgb(204, 204, 204); margin-top: 2%; margin-bottom: 2%; width: 100%;">
-                                            <!-- Order Card -->
-                                            <div class="order-card" style="position: relative; transform-style: preserve-3d; transition: transform 0.2s;">
-                                                <!-- Order Header -->
-                                                <div class="order-card-header" style="position: relative; margin-top: 2%;">
-                                                    <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">Order Id: {{order.id}}</span>
-                                                    <div class="form-check mr-5 mb-5" style="position: absolute; rig
-                                                    <span>Method</span>ht: 12px; transform: translateY(-115%); cursor: pointer;">
-                                                        <span style="font-size: 16px; font-weight: 500;">Payment Type: {{order.payment_type}}</span>
-                                                    </div>
-                                                </div>
-                                                <!-- Order Header -->
-                                                <!-- Order Body -->
-                                                <div class="address-card-header" style="position: relative; margin-bottom: 10px;">
-                                                    <div class="order-id" style="margin: 10px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; width:70%; ">
-                                                        Address: {{order.shipping_address.address}},{{order.shipping_address.locality}},
-                                                         {{order.shipping_address.city}}, {{order.shipping_address.state}} - {{order.shipping_address.pincode}}
-                                                    </div>
-                                                    <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-255%); cursor: pointer;">
-                                                        {% for method in order.payment_methods %}
-                                                            <span style="font-size: 16px; font-weight: 500;">Payment Method: {{method|capfirst}}</span>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                                <div class="address-card-header" style="position: relative; margin-bottom: 10px;">
-                                                    <span class="order-id" style="margin: 35px 0px 10px 9px; padding: 2px 5px 2px 5px; font-size: 16px; font-weight: 500; ">Order Date: <strong>{{order.order_date}}</strong></span>
-                                                    <div class="form-check mr-5 mb-5" style="position: absolute; right: 12px; transform: translateY(-115%); cursor: pointer;">
-                                                        <span style="font-size: 16px; font-weight: 500;">Order Amount: {{order.total_amount}}</span>
-                                                    </div>
-                                                </div>
-                                                <!-- Order Body -->
-                                            </div>
-                                            <!-- Order Card -->
-                                        </div>
-                                    </a>
-                                    {% endfor %}
-                                    <!-- Order List-->
-                                </div>
-                            </div>
-                        <!--Manage_Order --> {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -451,7 +310,6 @@
                                         <div style="width: 30%;">
                                             <div style="display: flex; align-items: center; justify-content: center;">
                                                 <button class="email-submitbtn" id="updateEmailButton" type="submit" 
-                                                    style=""
                                                     onmouseover="this.style.backgroundColor='#ff8a00'"
                                                     onmouseout="this.style.backgroundColor='#ffa500'">Update Email</button>
                                             </div>
@@ -614,7 +472,7 @@
                                                 <div style="position: relative;">
                                                     <div id="container">
                                                         <!-- ADD A NEW ADDRESS -->
-                                                        <div style="border: 1px solid rgb(204, 204, 204); cursor:pointer;" id="clickableDiv" onclick="toggleSection()">
+                                                        <div style="border: 1px solid rgb(204, 204, 204); cursor:pointer; width:98%" id="clickableDiv" onclick="toggleSection()">
                                                             <div class="row">
                                                                 <div class="col-sm-1" style="padding-left: 30px;">
                                                                     <div class="view-product">
@@ -631,7 +489,7 @@
                                                     
                                                     <!-- ADDRESS LISTS -->
 													{% for address in user_addresses %}
-														<div class="address-container" style="border: 1px solid rgb(204, 204, 204); margin-top: 2%;">
+														<div class="address-container" style="border: 1px solid rgb(204, 204, 204); margin-top: 2%; width:98%">
 															<!-- address detail -->
 															<div class="address-card" style="position: relative;">
 																<div class="address-card-header" style="position: relative; margin-top: 2%;">
@@ -1111,8 +969,17 @@
             });
         });
 
-        // Retrieve and show the stored section (if any) on page load
-        const selectedSection = localStorage.getItem('selectedSection');
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Retrieve and show the section specified in the URL or from localStorage on page load
+        const urlSection = getUrlParameter('section');
+        const selectedSection = urlSection || localStorage.getItem('selectedSection');
+
+
         if (selectedSection) {
             const targetSection = document.getElementById(selectedSection);
             if (targetSection) {
