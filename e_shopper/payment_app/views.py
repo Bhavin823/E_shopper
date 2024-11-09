@@ -32,6 +32,7 @@ def order_payment(request,order_id):
     order.razorpay_order_id = razorpay_order['id']
     order.save()
 
+    # print("callbackurl",request.build_absolute_uri(reverse('payment_app:callback')))
     # Render payment template with context
     return render(
         request,
