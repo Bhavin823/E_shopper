@@ -91,27 +91,28 @@ WSGI_APPLICATION = 'E_shopper.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# database setup for vercel
-import dj_database_url
-DATABASES['default'] = dj_database_url.config(default=config('DATABASE_URL'))
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME' : 'e-shopper',
-#         'USER' : 'postgres',
-#         'PASSWORD' : 'admin',
-#         'HOST' : 'localhost',
-#         'PORT' : '5432', 
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+# # database setup for vercel
+# import dj_database_url
+# DATABASES['default'] = dj_database_url.config(default=config('DATABASE_URL'))
+
+# aiven database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+    }
+}
 
 
 
@@ -174,3 +175,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # razorpay config
 RAZOR_KEY_ID=config('RAZOR_KEY_ID')
 RAZOR_KEY_SECRET=config('RAZOR_KEY_SECRET')
+
+# cloudinary setup for media file serving
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUD_NAME'),
+    'API_KEY': config('API_KEY'),
+    'API_SECRET': config('API_SECRET'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
