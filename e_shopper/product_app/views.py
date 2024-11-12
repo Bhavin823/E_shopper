@@ -7,28 +7,49 @@ from category_app.views import Cat_Subcat_Nav_View,cart_total_quantity
 from cart_app.models import CartModel,CartItemModel
 
 # Create your views here.
+def Brand_of_same_subcat_product(products):
+    brand_with_count = {}
+    for product in products:
+        brand = product.brandName
+        if brand in brand_with_count:
+            brand_with_count[brand] += 1
+        else:
+            brand_with_count[brand] = 1
+    return brand_with_count
+
 
 def ProductView(request,subcatslug):
+    selected_brand = request.GET.get('brand')
+
     if subcatslug == 'all':
         products = ProductModel.objects.filter(is_active=True) # Fetch all active products
         subcateheadername = "All Products" # Set subcategory name to "All Products"
         category = None
         product_with_same_category = ProductModel.objects.none()
-        
+        brand_product_with_same_subcate = Brand_of_same_subcat_product(products)
         # print(product_with_same_category)
+        print("sub:",subcateheadername,brand_product_with_same_subcate)
     
     else:
         subcategoryslug = get_object_or_404(SubCategoryModel, slug=subcatslug) #fetch slug of specified product
-        products  = ProductModel.objects.filter(subcategory=subcategoryslug, is_active=True) #fetch those product which subcategort match and active products
+        products  = ProductModel.objects.filter(subcategory=subcategoryslug, is_active=True) #fetch those product which subcategory match and active products
         subcateheadername = subcategoryslug.subcategoryName # Get the name of the subcategory
         category = subcategoryslug.category
         
         # recommended products from the same category
         product_with_same_category = ProductModel.objects.filter(category=category).exclude(subcategory=subcategoryslug)
         # print(product_with_same_category)
+
+        brand_product_with_same_subcate = Brand_of_same_subcat_product(products)
+        print("sub:",subcateheadername,brand_product_with_same_subcate)
     
+    # Filter products by selected brand if present
+    if selected_brand:
+        products = products.filter(brandName=selected_brand)
+
+    
+
     cat_subcat_for_nav = Cat_Subcat_Nav_View()  # left sidebar 
-    
     cart_total_quan = cart_total_quantity(request) # cart total quantity
 
     if request.user.is_authenticated:
@@ -61,6 +82,7 @@ def ProductView(request,subcatslug):
         'product_with_same_category':product_with_same_category,
         'cart_total_quantity':cart_total_quan,
         'category':category,
+        'brand_product_with_same_subcate':brand_product_with_same_subcate,
     }
     return render(request,'product_app/product.html',context)
 
@@ -130,19 +152,23 @@ def ProductDetailView(request, productslug):
 
 def product_list(request):
     query = request.GET.get('q')
+    selected_brand = request.GET.get('brand')
+    products = ProductModel.objects.filter(is_active=True)
     if query:
         # Filter products by category, subcategory, or product name
         products = ProductModel.objects.filter(
             Q(ProductName__icontains=query) |  # Search by product name
-            Q(category__categoryName__icontains=query) |  # Search by category name
-            Q(subcategory__subcategoryName__icontains=query),  # Search by subcategory name
+            Q(category__categoryName__iexact=query) |  # Search by category name
+            Q(subcategory__subcategoryName__iexact=query),  # Search by subcategory name
             is_active=True  # Ensure only active products are shown
         )
-    else:
-        products = ProductModel.objects.filter(is_active=True)
+    
+    if selected_brand:
+        products = ProductModel.objects.filter(brandName=selected_brand)
+    
+    brand_product_with_same_subcate = Brand_of_same_subcat_product(products)
     
     cat_subcat_for_nav = Cat_Subcat_Nav_View()  # left sidebar 
-    
     cart_total_quan = cart_total_quantity(request) # cart total quantity
 
 
@@ -150,5 +176,7 @@ def product_list(request):
         'products':products,
         'cat_sub_nav' : cat_subcat_for_nav,
         'cart_total_quan':cart_total_quan,
+        'brand_product_with_same_subcate':brand_product_with_same_subcate,
+        'query':query,
     }    
     return render(request,'product_app/product_list.html',context)
