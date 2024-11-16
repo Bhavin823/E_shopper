@@ -134,13 +134,19 @@
                         {% for cart_item in cart_items %}
                             <tr>
                                 <td class="cart_product" style="margin:10px;">
+                                    {% if cart_item.product.images.all %}
                                     <a href="{% url 'product_app:productdetail' cart_item.product.slug %}">
-                                        <img src="{{ cart_item.product.ProductImage.url }}" 
+                                        <img src="{{ cart_item.product.images.all.0.image.url }}" 
                                         alt="{{ cart_item.product.ProductName }}" width="50"></a>
+                                    {% else %}
+                                    <a href="{% url 'product_app:productdetail' cart_item.product.slug %}">
+                                        <img src="#" 
+                                        alt="{{ cart_item.product.ProductName }} image" width="50"></a>
+                                    {% endif %}
                                 </td>
                                 <td class="cart_description" style="white-space: normal;">
                                     <h4 style="margin:0; text-align:left;"><a href="{% url 'product_app:productdetail' cart_item.product.slug %}">
-                                        {{cart_item.product.ProductName}}</a></h4>
+                                        {{cart_item.product.ProductName|truncatechars:50}}</a></h4>
                                 </td>
                                 {% if has_size %}
                                     <td>
