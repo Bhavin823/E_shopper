@@ -86,6 +86,8 @@ def cartView(request):
     except CartModel.DoesNotExist:
         cart = CartModel.objects.create(user=user)
     
+
+    
     cart_item = cart.items.all()
     # print(cart_item)
 

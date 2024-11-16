@@ -27,8 +27,6 @@ def Cat_Subcat_Nav_View():
 # fech all category
 def CategoryView():
     categories = CategoryModel.objects.all()
-    
-    # print("category from category_app:",)
     return categories
 
 # test subcategorypage

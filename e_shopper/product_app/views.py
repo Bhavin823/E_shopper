@@ -22,17 +22,17 @@ def ProductView(request,subcatslug):
     selected_brand = request.GET.get('brand')
 
     if subcatslug == 'all':
-        products = ProductModel.objects.filter(is_active=True) # Fetch all active products
+        products = ProductModel.objects.filter(is_active=True).prefetch_related('images') # Fetch all active products
         subcateheadername = "All Products" # Set subcategory name to "All Products"
         category = None
         product_with_same_category = ProductModel.objects.none()
         brand_product_with_same_subcate = Brand_of_same_subcat_product(products)
         # print(product_with_same_category)
-        print("sub:",subcateheadername,brand_product_with_same_subcate)
+        # print("sub:",subcateheadername,brand_product_with_same_subcate)
     
     else:
         subcategoryslug = get_object_or_404(SubCategoryModel, slug=subcatslug) #fetch slug of specified product
-        products  = ProductModel.objects.filter(subcategory=subcategoryslug, is_active=True) #fetch those product which subcategory match and active products
+        products  = ProductModel.objects.filter(subcategory=subcategoryslug, is_active=True).prefetch_related('images') #fetch those product which subcategory match and active products
         subcateheadername = subcategoryslug.subcategoryName # Get the name of the subcategory
         category = subcategoryslug.category
         
@@ -41,7 +41,7 @@ def ProductView(request,subcatslug):
         # print(product_with_same_category)
 
         brand_product_with_same_subcate = Brand_of_same_subcat_product(products)
-        print("sub:",subcateheadername,brand_product_with_same_subcate)
+        # print("sub:",subcateheadername,brand_product_with_same_subcate)
     
     # Filter products by selected brand if present
     if selected_brand:
@@ -92,6 +92,8 @@ def ProductDetailView(request, productslug):
         subcategory=productdetail.subcategory, is_active=True
     ).exclude(id=productdetail.id)
 
+
+    product_images = productdetail.images.all() # get all product releted images
     available_sizes = productdetail.sizes.all()
     cat_subcat_for_nav = Cat_Subcat_Nav_View()  # left sidebar
     cart_total_quan = 0
@@ -147,6 +149,7 @@ def ProductDetailView(request, productslug):
         'cart_total_quantity': cart_total_quan,
         'available_sizes': available_sizes,
         'cart_item': cart_item,  # cart_item will be None if the user is not logged in
+        'product_images':product_images
     }
     return render(request, 'product_app/productdetail.html', context)
 
@@ -159,9 +162,12 @@ def product_list(request):
         products = ProductModel.objects.filter(
             Q(ProductName__icontains=query) |  # Search by product name
             Q(category__categoryName__iexact=query) |  # Search by category name
-            Q(subcategory__subcategoryName__iexact=query),  # Search by subcategory name
+            Q(subcategory__subcategoryName__iexact=query)|  # Search by subcategory name
+            Q(brandName__icontains=query),
             is_active=True  # Ensure only active products are shown
-        )
+        ).prefetch_related('images')
+    
+    recommended_products = ProductModel.objects.filter(is_active=True).order_by('?')[:6].prefetch_related('images')
     
     if selected_brand:
         products = ProductModel.objects.filter(brandName=selected_brand)
@@ -178,5 +184,6 @@ def product_list(request):
         'cart_total_quan':cart_total_quan,
         'brand_product_with_same_subcate':brand_product_with_same_subcate,
         'query':query,
+        'recommended_products':recommended_products,
     }    
     return render(request,'product_app/product_list.html',context)
