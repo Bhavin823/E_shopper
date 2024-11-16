@@ -86,7 +86,30 @@
                 <div class="product-details">
                     <div class="col-sm-5">
                         <div class="view-product product-detail">
-                            <img src="{{ productdetail.ProductImage.url }}" alt="" />
+                            <!-- Main image display area -->
+                            <div class="img-display">
+                                <div class="img-showcase">
+                                    {% for image in product_images %}
+                                        <img style="border: none;" src="{{ image.image.url }}" alt="{{ product.ProductName }}" />
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- Thumbnail selection area -->
+                            <div class="img-select">
+                                {% for image in product_images %}
+                                    <div class="img-item">
+                                        <a href="#" data-id="{{ forloop.counter }}">
+                                            <img src="{{ image.image.url }}" alt="{{ product.ProductName }}" />
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <!-- {% if productdetail.ProductImage %}
+                                <img src="{{ productdetail.ProductImage.url }}" alt="{{productdetail.ProductName}}" />
+                            {% else %}
+                                <img src="#" alt="{{productdetail.ProductName}} image" />
+                            {% endif %} -->
                         </div>
                     </div>
                     <div class="col-sm-7">
@@ -151,15 +174,15 @@
                                         const sizeInputs = document.querySelectorAll('input[name="size"]');
                                         const addToCartLink = document.getElementById('add-to-cart-link');
                                         const PriceElement = document.querySelector('.prodetprice');
-                                        const basePrice = {{ productdetail.ProductPrice }};  // Base price of the product
-                                        console.log("baseprice:",basePrice)
+                                        const basePrice = Number(`{{ productdetail.ProductPrice }}`);  // Base price of the product
+                                        // console.log("baseprice:",basePrice)
 
                                         
                                         sizeInputs.forEach(function(input) {
                                             input.addEventListener('change', function() {
                                                 const selectedPrice = parseInt(this.getAttribute('data-price')) || 0;
-                                                const finalPrice = basePrice + selectedPrice
-                                                console.log("finalPrice:",finalPrice)
+                                                const finalPrice = basePrice + selectedPrice;
+                                                console.log("finalPrice:",finalPrice);
 
                                                 // Update the displayed price
                                                 PriceElement.textContent = `Rs.${finalPrice}`;
@@ -214,9 +237,8 @@
                                             }
                                         }
                                     });
-                                </script>
-                                
-
+                            </script>
+                        </div>
                         <!--/product-information-->
                     </div>
                 </div>
@@ -312,7 +334,11 @@
                                                 <div class="single-products">
                                                     <div class="productinfo rec-info text-center">
                                                         <a href="{% url 'product_app:productdetail' product.slug %}">
-                                                            <img src=" {{product.ProductImage.url}} " alt="" style="width:100%; aspect-ratio: 1 / 1;"/>
+                                                            {% if product.images.all %}
+                                                            <img src=" {{product.images.all.0.image.url}} " alt="{{product.ProductName}}" style="width:100%; aspect-ratio: 1 / 1;"/>
+                                                            {% else %}
+                                                            <img src="#" alt="{{product.ProductName}} image" style="width:100%; aspect-ratio: 1 / 1;"/>
+															{% endif %}
                                                             <h2>Rs.{{product.ProductPrice}}</h2>
                                                             <h4>{{product.brandName}}</h4>
                                                             <p>{{product.ProductName|truncatechars:30}}</p>
@@ -377,6 +403,29 @@
         </div>
     
     </div>
+
+    <!-- JavaScript for image slider functionality -->
+    <script>
+        const imgs = document.querySelectorAll('.img-select a');
+        const imgBtns = [...imgs];
+        let imgId = 1;
+        
+        imgBtns.forEach((imgItem) => {
+            imgItem.addEventListener('click', (event) => {
+                event.preventDefault();
+                imgId = imgItem.dataset.id;
+                slideImage();
+            });
+        });
+        
+        function slideImage(){
+            const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
+            document.querySelector('.img-showcase').style.transform = `translateX(${(-(imgId - 1) * (displayWidth))}px)`;
+        }
+        
+        window.addEventListener('resize', slideImage);
+    </script>
+
 
 </section>
 <!--main content-->

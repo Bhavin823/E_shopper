@@ -101,8 +101,8 @@
 										<div class="single-products">
 											<div class="productinfo text-center">
 												<a href="{% url 'product_app:productdetail' product.slug %}">	
-													{% if product.ProductImage %}
-														<img src="{{ product.ProductImage.url }}" alt="{{ product.ProductName }}"
+													{% if product.images.all %}
+														<img src="{{ product.images.all.0.image.url }}" alt="{{ product.ProductName }}"
 														style="display: block; width: 100%; aspect-ratio: 1/1; border-bottom: 1px solid #ddd;" />
 													{% else %}
 														<img src="#" alt="{{product.ProductName}} image" 
@@ -144,12 +144,12 @@
 					<!--features_items-->
 					
 					<!--recommended_products-->
-					{% if product_with_same_category %}
+					{% if recommended_products %}
 						<div class="recommended_items">
 							<h2 class="title text-center">recommended items</h2>
 							<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 								<div class="carousel-inner">
-									{% for product  in product_with_same_category %}
+									{% for product  in recommended_products %}
 										{% if forloop.counter0|divisibleby:3 %}
 											<div class="item {% if forloop.first %} active{% endif %}">
 										{% endif %}
@@ -158,7 +158,11 @@
 														<div class="single-products">
 															<div class="productinfo rec-info text-center">
 																<a href="{% url 'product_app:productdetail' product.slug %}">
-																	<img src=" {{product.ProductImage.url}} " alt="" style="width:100%; aspect-ratio: 1 / 1;"/>
+																	{% if product.images.all %}
+																	<img src=" {{product.images.all.0.image.url}} " alt="{{product.ProductName}}" style="width:100%; aspect-ratio: 1 / 1;"/>
+																	{% else %}
+																	<img src="#" alt="{{product.ProductName}} image" style="width:100%; aspect-ratio: 1 / 1;"/>
+																	{% endif %}
 																	<h2>Rs.{{product.ProductPrice}}</h2>
 																	<h4>{{product.brandName}}</h4>
 																	<p>{{product.ProductName|truncatechars:30}}</p>
