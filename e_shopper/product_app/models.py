@@ -9,7 +9,7 @@ from cloudinary_storage.storage import MediaCloudinaryStorage
 class ProductModel(models.Model):
     ProductName = models.CharField(max_length=100)
     ProductImage = models.ImageField(blank=True,storage=MediaCloudinaryStorage(),upload_to='product/')
-    category = models.ForeignKey(CategoryModel,on_delete=models.CASCADE)
+    category = models.ForeignKey(CategoryModel,related_name='products',on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategoryModel,on_delete=models.CASCADE)
     brandName = models.CharField(max_length=100)
     ProductPrice =models.IntegerField()
@@ -58,3 +58,6 @@ class ProductSize(models.Model):
     def __str__(self):
         return f'{self.product.ProductName} - {self.size}'
         
+class ProductImage(models.Model):
+    product = models.ForeignKey(ProductModel, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(blank=True,storage=MediaCloudinaryStorage(),upload_to='product/')
