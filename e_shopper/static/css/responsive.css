@@ -351,6 +351,10 @@
 			display: none;
 		}
 
+		.order-item-options-new-heading{
+			display: block;
+		}
+
 		.order-item-options-new {
 			gap: 2rem;
 			align-items: flex-start;
@@ -968,6 +972,14 @@
 
 		.order-items-header-new{
 			display: none;
+		}
+
+		.order-item-options-new-heading{
+			display: flex;
+			gap: 2rem;
+			align-items: flex-start;
+			justify-content: flex-start;
+			padding-left: 10rem;
 		}
 
 		.order-item-options-new {
