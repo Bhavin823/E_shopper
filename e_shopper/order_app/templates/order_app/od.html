@@ -100,27 +100,42 @@
             <div class="order-item-new">
               <div class="order-item-info-new">
                 <div class="order-item-image-new">
+                  {% if item.product.images %}
                   <a href="{% url 'product_app:productdetail' item.product.slug %}">
                     <img
-                      src="{{ item.product.ProductImage.url }}"
+                      src="{{ item.product.images.all.0.image.url }}"
                       alt="{{ item.product.ProductName }}"
                       />
                   </a>
+                  {% else %}
+                  <a href="{% url 'product_app:productdetail' item.product.slug %}">
+                    <img
+                      src="#"
+                      alt="{{ item.product.ProductName }} image"
+                      />
+                  </a>
+                  {% endif %}
                 </div>
                 <div class="order-item-details-new">
                   <h4 class="order-item-name-new">
                     <a href="{% url 'product_app:productdetail' item.product.slug %}">
-                    {{item.product.ProductName}}
+                    {{item.product.ProductName|truncatechars:50}}
                     </a>
                   </h4>
                   <h5 class="order-item-id-new">Product ID: {{item.product.id}}</h5>
                 </div>
               </div>
+              <div class="order-item-options-new-heading">
+                <h5 class="order-item-size-new">Size</h5>
+                <h5 class="order-item-price-new">Price</h5>
+                <h5 class="order-item-size-new">Qty</h5>
+                <h5 class="order-item-price-new">Total</h5>
+              </div>
               <div class="order-item-options-new">
                 {% if item.size %}
                   <h5 class="order-item-size-new">{{item.size.size}}</h5>
                 {% else %}  
-                  <h5 class="order-item-size-new"></h5>
+                  <h5 class="order-item-size-new">--</h5>
                 {% endif %}
                 <h5 class="order-item-price-new">{{ item.price|floatformat:"-2"|intcomma }}</h5>
                 <h5 class="order-item-size-new">{{item.quantity}} Qty</h5>
