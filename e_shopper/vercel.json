@@ -24,7 +24,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "E_Shopper/wsgi.py"
+        "dest": "E_shopper/wsgi.py"
       }
     ]
   }
