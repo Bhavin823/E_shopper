@@ -8,7 +8,6 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  background:;
   position: relative;
   font-weight:400px;
 }
@@ -3077,6 +3076,10 @@ h2.title {
         color: #6b7280;
       }
 
+      .order-item-options-new-heading{
+        display: none;
+      }
+
       .order-item-options-new {
         display: flex;
         gap: 6rem;
@@ -3230,4 +3233,31 @@ h2.title {
         margin-top:12px; 
         margin-bottom: 12px; 
         color:#FE980f;
+      }
+
+      /* imageslider in productdetail page */
+      .img-display { 
+        overflow: hidden; 
+      }
+      
+      .img-showcase { 
+        display: flex;
+        width: 100%; 
+        transition: all 0.5s ease; 
+      }
+      
+      .img-showcase img { 
+        min-width: 100%; 
+      }
+      
+      .img-select { 
+        display: flex; 
+      }
+      
+      .img-item { 
+        margin: 0.3rem; 
+      }
+      
+      .img-item:hover { 
+        opacity: 0.8; 
       }
