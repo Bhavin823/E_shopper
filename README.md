@@ -36,7 +36,7 @@ Check out the live demo: [Eshopper Demo](https://eshopper-fawn.vercel.app/)
 
 - **Backend**: Python, Django
 - **Frontend**: HTML, CSS, JavaScript
-- **Database**: SQLite (or other Django-compatible database)
+- **Database**: Postgres
 - **Payment Gateway**: Razorpay
 
 ## License
