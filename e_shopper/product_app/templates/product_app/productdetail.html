@@ -4,7 +4,7 @@
 {% block meta_tags %}
 <meta property="og:title" content="{{ productdetail.ProductName }}" />
 <meta property="og:description" content="{{ productdetail.ProductDetail|truncatewords:20 }}" />
-<meta property="og:image" content="{{ product_images.image.0.image.url }}" />
+<meta property="og:image" content="{{ productdetail.images.all.0.image.url }}" />
 <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 <meta property="og:type" content="product" />
 {% endblock meta_tags %}
