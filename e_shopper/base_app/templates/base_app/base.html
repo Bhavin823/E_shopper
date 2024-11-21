@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+	{% block meta_tags %}
+    <!-- Default Open Graph Meta Tags -->
+    <meta property="og:title" content="Eshopper - Your One-Stop Online Store" />
+    <meta property="og:description" content="Discover the best deals on fashion, and more. Shop now at Eshopper for unbeatable prices and fast delivery!" />
+    <meta property="og:image" content="{% static 'images/shop/eshopper_banner.png' %}" />
+    <meta property="og:url" content="https://eshopper-fawn.vercel.app/" />
+    <meta property="og:type" content="website" />
+    {% endblock meta_tags %}
     <title>E-Shopper</title>
 
 	<link rel="icon" type="image/png" href="{% static 'images/shop/ES_icon-32x32.png' %}">
@@ -149,7 +157,7 @@
 							<ul class="nav nav-pills nav-stacked">
 								<!-- <li><a href="#">Online Help</a></li> -->
 								<li><a href="#">Contact Us</a></li>
-								<li><a href="#">Order Status</a></li>
+								<li><a href="{% url 'user_app:profile' %}?section=MY_ORDERS" class="clickable-link">Order Status</a></li>
 								<!-- <li><a href="#">Change Location</a></li> -->
 								<li><a href="#">FAQ’s</a></li>
 							</ul>
@@ -157,13 +165,12 @@
 					</div>
 					<div class="col-sm-2">
 						<div class="single-widget">
-							<h2>Quock Shop</h2>
+							<h2>Quick Shop</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">T-Shirt</a></li>
-								<li><a href="#">Mens</a></li>
-								<li><a href="#">Womens</a></li>
+								<li><a href="{% url "product_app:products" 'clothes-men' %}">Mens</a></li>
+								<li><a href="{% url "product_app:products" 'clothes-men' %}">Womens</a></li>
+								<li><a href="{% url "category_app:subcat" 'shoes' %}">Shoes</a></li>
 								<!-- <li><a href="#">Gift Cards</a></li> -->
-								<li><a href="#">Shoes</a></li>
 							</ul>
 						</div>
 					</div>
@@ -171,25 +178,23 @@
 						<div class="single-widget">
 							<h2>Policies</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">Terms of Use</a></li>
-								<li><a href="#">Privecy Policy</a></li>
+								<li><a href="#">Privacy Policy</a></li>
 								<li><a href="#">Refund Policy</a></li>
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-2">
+					{% comment %} <div class="col-sm-2">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">Company Information</a></li>
-								<li><a href="#">Careers</a></li>
+								<li><a href="#">Information</a></li>
 								<li><a href="#">Copyright</a></li>
 							</ul>
 						</div>
-					</div>
+					</div> {% endcomment %}
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
-							<h2>About Shopper</h2>
+							<h2>Subscribe</h2>
 							<form action="#" class="searchform">
 								<input type="text" placeholder="Your email address" />
 								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
@@ -205,7 +210,7 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2022 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-left">Copyright © 2024 E-SHOPPER Inc. All rights reserved.</p>
 					<!-- <p class="pull-right">Designed by <span><a target="_blank" href="#">xyz</a></span></p> -->
 				</div>
 			</div>
