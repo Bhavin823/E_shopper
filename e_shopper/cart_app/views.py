@@ -38,7 +38,7 @@ def add_to_cart(request, productslug):
     size = None
 
     if size_id:
-        print(size_id)
+        # print(size_id)
         # print(product_final_price)
         size = get_object_or_404(ProductSize, id=size_id)
 

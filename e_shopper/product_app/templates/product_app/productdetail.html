@@ -104,6 +104,7 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                            <!-- Main image display area -->
                             
                             <!-- Thumbnail selection area -->
                             <div class="img-select">
@@ -115,6 +116,8 @@
                                     </div>
                                 {% endfor %}
                             </div>
+                            <!-- Thumbnail selection area -->
+                            
                             <!-- {% if productdetail.ProductImage %}
                                 <img src="{{ productdetail.ProductImage.url }}" alt="{{productdetail.ProductName}}" />
                             {% else %}
@@ -353,26 +356,6 @@
                                                             <h4>{{product.brandName}}</h4>
                                                             <p>{{product.ProductName|truncatechars:30}}</p>
                                                         </a>
-                                                        {% comment %} {% if request.user.is_authenticated %}
-                                                            {% if product.quantity_in_cart > 0 %}
-                                                                <a href="{% url 'cart_app:cart' %}" class="btn btn-default add-to-cart">
-                                                                    <div class="cart-icon">
-                                                                        <i class="fa fa-shopping-cart"></i>
-                                                                        <span class="cart-quantity">{{ product.quantity_in_cart }}</span>
-                                                                    </div>&nbsp&nbsp&nbsp&nbsp&nbsp Go to cart
-                                                                </a>
-                                                            {% else %}
-                                                                <a href="{% url 'cart_app:add_to_cart' product.slug %}?subcatslug=productdetail"
-                                                                class="btn btn-default add-to-cart">
-                                                                    <i class="fa fa-shopping-cart"></i> Add to cart
-                                                                </a>
-                                                            {% endif %}
-                                                        {% else %}
-                                                            <a href="{% url 'user_app:login' %}?next={{ request.path }}"
-                                                                class="btn btn-default add-to-cart">
-                                                                <i class="fa fa-lock"></i> Login For Add To Cart
-                                                            </a>
-                                                        {% endif %} {% endcomment %}
                                                     </div>
                                                     <!-- <div class="product-overlay">
                                                         <div class="overlay-content">
