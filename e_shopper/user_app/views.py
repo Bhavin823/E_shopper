@@ -8,6 +8,7 @@ from user_app.models import UserProfile,UserAddress
 from order_app.models import OrderModel
 from payment_app.models import RazorpayOrder,RazorpayPayment
 from cart_app.views import cart_total_quantity
+from django.contrib import messages
 
 # Create your views here.
 # signup page
@@ -94,6 +95,7 @@ def handleLogin(request):
             # check in url and then redirect to return page
             next_url = request.POST.get('next','')
             print("next_url:",next_url)
+            messages.success(request, f"Welcome {user.username}!")
             if retpath == "prolog":
                 return redirect('product_app:products',subcatslug=subcatslug)
             elif retpath == 'prodet':
